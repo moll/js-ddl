@@ -56,13 +56,6 @@ describe("SQLite3", function() {
       this.attrs.age.must.have.property("limit", null)
       this.attrs.notes.must.have.property("limit", null)
     })
-
-    xit("must return the raw column info in the raw property", function() {
-      this.attrs.id.raw.type.must.equal("INTEGER")
-      this.attrs.name.raw.type.must.equal("VARCHAR(255)")
-      this.attrs.age.raw.type.must.equal("INTEGER")
-      this.attrs.notes.raw.type.must.equal("TEXT")
-    })
   })
 
   describe("types", function() {
