@@ -9,18 +9,14 @@ describe("SQLite3", function() {
   afterEach(function(done) { db.run("ROLLBACK TRANSACTION", done) })
 
   describe("given a simple table", function() {
-    beforeEach(db.run.bind(db,
+    withSql(
       'CREATE TABLE "test" (' +
         '"id" INTEGER PRIMARY KEY,' +
         '"name" VARCHAR(255) NOT NULL,' +
         '"age" INTEGER DEFAULT 18,' +
         '"notes" TEXT DEFAULT \'\'' +
       ')'
-    ))
-
-    beforeEach(withAttrs(function(attrs) {
-      this.attrs = attrs
-    }))
+    )
 
     it("must return all column names", function() {
       this.attrs.must.have.keys(["id", "name", "age", "notes"])
@@ -68,6 +64,75 @@ describe("SQLite3", function() {
       this.attrs.notes.raw.type.must.equal("TEXT")
     })
   })
+
+  describe("given types", function() {
+    ;[
+      "INT",
+      "INTEGER",
+      "TINYINT",
+      "SMALLINT",
+      "MEDIUMINT",
+      "BIGINT",
+      "UNSIGNED BIG INT",
+      "INT2",
+      "INT8",
+      "REAL",
+      "DOUBLE",
+      "DOUBLE PRECISION",
+      "FLOAT",
+      "NUMERIC",
+      "DECIMAL"
+    ].forEach(function(type) {
+      describe("given " + type, function() {
+        withSql('CREATE TABLE "test" ("foo" ' + type + ')')
+
+        it("must set type to Number", function() {
+          this.attrs.foo.type.must.equal(Number)
+        })
+      })
+    })
+
+    ;[
+      "CHARACTER",
+      "VARCHAR",
+      "VARYING CHARACTER",
+      "NCHAR",
+      "NATIVE CHARACTER",
+      "NVARCHAR",
+      "TEXT",
+      "CLOB",
+      "BLOB"
+    ].forEach(function(type) {
+      describe("given " + type, function() {
+        withSql('CREATE TABLE "test" ("foo" ' + type + ')')
+
+        it("must set type to String", function() {
+          this.attrs.foo.type.must.equal(String)
+        })
+      })
+    })
+
+    describe("given BOOLEAN", function() {
+      withSql('CREATE TABLE "test" ("foo" BOOLEAN)')
+
+      it("must set type to Boolean", function() {
+        this.attrs.foo.type.must.equal(Boolean)
+      })
+    })
+
+    describe("given CUSTOM", function() {
+      withSql('CREATE TABLE "test" ("foo" CUSTOM)')
+
+      it("must set type to String", function() {
+        this.attrs.foo.type.must.equal(String)
+      })
+    })
+  })
+
+  function withSql(sql, fn) {
+    beforeEach(db.run.bind(db, sql))
+    beforeEach(withAttrs(function(attrs) { this.attrs = attrs }))
+  }
 
   function withAttrs(fn) {
     return function(done) {
