@@ -58,7 +58,7 @@ describe("SQLite3", function() {
     })
   })
 
-  describe("types", function() {
+  describe("type", function() {
     ;[
       "INT",
       "INTEGER",
@@ -79,7 +79,7 @@ describe("SQLite3", function() {
       describe("given " + type, function() {
         withSql('CREATE TABLE "test" ("foo" ' + type + ')')
 
-        it("must set type to Number", function() {
+        it("must be set to Number", function() {
           this.attrs.foo.type.must.equal(Number)
         })
       })
@@ -99,7 +99,7 @@ describe("SQLite3", function() {
       describe("given " + type, function() {
         withSql('CREATE TABLE "test" ("foo" ' + type + ')')
 
-        it("must set type to String", function() {
+        it("must be set to String", function() {
           this.attrs.foo.type.must.equal(String)
         })
       })
@@ -108,7 +108,7 @@ describe("SQLite3", function() {
     describe("given BOOLEAN", function() {
       withSql('CREATE TABLE "test" ("foo" BOOLEAN)')
 
-      it("must set type to Boolean", function() {
+      it("must be set to Boolean", function() {
         this.attrs.foo.type.must.equal(Boolean)
       })
     })
@@ -116,7 +116,7 @@ describe("SQLite3", function() {
     describe("given DATE", function() {
       withSql('CREATE TABLE "test" ("foo" DATE)')
 
-      it("must set type to Date", function() {
+      it("must be set to Date", function() {
         this.attrs.foo.type.must.equal(Date)
       })
     })
@@ -124,7 +124,7 @@ describe("SQLite3", function() {
     describe("given lower-case DATE", function() {
       withSql('CREATE TABLE "test" ("foo" date)')
 
-      it("must set type to Date", function() {
+      it("must be set to Date", function() {
         this.attrs.foo.type.must.equal(Date)
       })
     })
@@ -132,7 +132,7 @@ describe("SQLite3", function() {
     describe("given DATETIME", function() {
       withSql('CREATE TABLE "test" ("foo" DATETIME)')
 
-      it("must set type to Date", function() {
+      it("must be set to Date", function() {
         this.attrs.foo.type.must.equal(Date)
       })
     })
@@ -140,7 +140,7 @@ describe("SQLite3", function() {
     describe("given CUSTOM", function() {
       withSql('CREATE TABLE "test" ("foo" CUSTOM)')
 
-      it("must set type to String", function() {
+      it("must be set to String", function() {
         this.attrs.foo.type.must.equal(String)
       })
     })
