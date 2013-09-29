@@ -128,6 +128,14 @@ describe("SQLite3", function() {
       })
     })
 
+    describe("given lower-case DATE", function() {
+      withSql('CREATE TABLE "test" ("foo" date)')
+
+      it("must set type to Date", function() {
+        this.attrs.foo.type.must.equal(Date)
+      })
+    })
+
     describe("given DATETIME", function() {
       withSql('CREATE TABLE "test" ("foo" DATETIME)')
 
