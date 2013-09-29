@@ -65,7 +65,7 @@ describe("SQLite3", function() {
     })
   })
 
-  describe("given types", function() {
+  describe("types", function() {
     ;[
       "INT",
       "INTEGER",
@@ -117,6 +117,22 @@ describe("SQLite3", function() {
 
       it("must set type to Boolean", function() {
         this.attrs.foo.type.must.equal(Boolean)
+      })
+    })
+
+    describe("given DATE", function() {
+      withSql('CREATE TABLE "test" ("foo" DATE)')
+
+      it("must set type to Date", function() {
+        this.attrs.foo.type.must.equal(Date)
+      })
+    })
+
+    describe("given DATETIME", function() {
+      withSql('CREATE TABLE "test" ("foo" DATETIME)')
+
+      it("must set type to Date", function() {
+        this.attrs.foo.type.must.equal(Date)
       })
     })
 
