@@ -22,6 +22,9 @@ publish:
 clean:
 	rm -rf tmp *.tgz
 
+createdb:
+	createdb -E utf8 -T template0 assertions_test
+
 .PHONY: love test spec autotest
 .PHONY: pack publish clean
-
+.PHONY: createdb
