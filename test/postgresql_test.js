@@ -17,6 +17,37 @@ describe("PostgreSQL", function() {
     Shared.mustPassSimpleTable(withSql)
   })
 
+  describe("type", function() {
+    ;[
+      "BIGINT",
+      "BIGSERIAL",
+      "BOOLEAN",
+      "DOUBLE PRECISION",
+      "INTEGER",
+      "NUMERIC",
+      "REAL",
+      "SMALLINT",
+      "SMALLSERIAL",
+      "SERIAL"
+    ].forEach(function(type) {
+      describe("given " + type, function() {
+        withSql('CREATE TABLE "test" ("foo" ' + type + ')')
+
+        it("must be set to Number", function() {
+          this.attrs.foo.type.must.equal(Number)
+        })
+      })
+    })
+
+    describe("given differently cased type", function() {
+      withSql('CREATE TABLE "test" ("foo" Date)')
+
+      it("must be set properly", function() {
+        this.attrs.foo.type.must.equal(Date)
+      })
+    })
+  })
+
   function withSql(sql, fn) {
     beforeEach(function(done) { db.query(sql, done) })
     beforeEach(withAttrs(function(attrs) { this.attrs = attrs }))
