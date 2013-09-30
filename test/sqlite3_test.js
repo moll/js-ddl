@@ -96,6 +96,14 @@ describe("SQLite3", function() {
       })
     })
 
+    describe("given autoincrement", function() {
+      withSql('CREATE TABLE "test" ("foo" INTEGER PRIMARY KEY AUTOINCREMENT)')
+
+      it("must be set to null", function() {
+        this.attrs.foo.must.have.property("default", null)
+      })
+    })
+
     describe("of TEXT column", function() {
       describe("given string surrounded by '", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'a b c\')')
