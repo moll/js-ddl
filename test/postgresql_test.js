@@ -1,4 +1,6 @@
+var _ = require("underscore")
 var Pg = require("pg").native
+
 Pg.defaults.host = "/tmp"
 Pg.defaults.database = "assertions_test"
 
@@ -18,23 +20,31 @@ describe("PostgreSQL", function() {
   })
 
   describe("type", function() {
-    ;[
-      "BIGINT",
-      "BIGSERIAL",
-      "BOOLEAN",
-      "DOUBLE PRECISION",
-      "INTEGER",
-      "NUMERIC",
-      "REAL",
-      "SMALLINT",
-      "SMALLSERIAL",
-      "SERIAL"
-    ].forEach(function(type) {
+    _({
+      BIGINT: Number,
+      BIGSERIAL: Number,
+      BOOLEAN: Boolean,
+      "CHARACTER VARYING": String,
+      CHARACTER: String,
+      DATE: Date,
+      "DOUBLE PRECISION": Number,
+      INTEGER: Number,
+      NUMERIC: Number,
+      REAL: Number,
+      SMALLINT: Number,
+      SMALLSERIAL: Number,
+      SERIAL: Number,
+      TEXT: String,
+      TIME: Date,
+      "TIME WITHOUT TIME ZONE": Date,
+      TIMESTAMP: Date,
+      "TIMESTAMP WITHOUT TIME ZONE": Date
+    }).each(function(klass, type) {
       describe("given " + type, function() {
         withSql('CREATE TABLE "test" ("foo" ' + type + ')')
 
-        it("must be set to Number", function() {
-          this.attrs.foo.type.must.equal(Number)
+        it("must be set to " + klass.name, function() {
+          this.attrs.foo.type.must.equal(klass)
         })
       })
     })
