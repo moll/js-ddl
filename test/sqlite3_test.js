@@ -1,3 +1,5 @@
+var _ = require("underscore")
+
 var Sqlite3 = require("sqlite3")
 var db = new Sqlite3.Database(":memory:")
 db.serialize()
@@ -14,80 +16,48 @@ describe("SQLite3", function() {
   })
 
   describe("type", function() {
-    ;[
-      "INT",
-      "INTEGER",
-      "TINYINT",
-      "SMALLINT",
-      "MEDIUMINT",
-      "BIGINT",
-      "UNSIGNED BIG INT",
-      "INT2",
-      "INT8",
-      "REAL",
-      "DOUBLE",
-      "DOUBLE PRECISION",
-      "FLOAT",
-      "NUMERIC",
-      "DECIMAL"
-    ].forEach(function(type) {
+    _({
+      BIGINT: Number,
+      BLOB: String,
+      BOOLEAN: Boolean,
+      CHARACTER: String,
+      CLOB: String,
+      DATE: Date,
+      DATETIME: Date,
+      DECIMAL: Number,
+      DOUBLE: Number,
+      "DOUBLE PRECISION": Number,
+      FLOAT: Number,
+      INT2: Number,
+      INT8: Number,
+      INT: Number,
+      INTEGER: Number,
+      MEDIUMINT: Number,
+      "NATIVE CHARACTER": String,
+      NCHAR: String,
+      NUMERIC: Number,
+      NVARCHAR: String,
+      REAL: Number,
+      SMALLINT: Number,
+      TEXT: String,
+      TINYINT: Number,
+      "UNSIGNED BIG INT": Number,
+      VARCHAR: String,
+      "VARYING CHARACTER": String,
+    }).each(function(klass, type) {
       describe("given " + type, function() {
         withSql('CREATE TABLE "test" ("foo" ' + type + ')')
 
-        it("must be set to Number", function() {
-          this.attrs.foo.type.must.equal(Number)
+        it("must be set to " + klass.name, function() {
+          this.attrs.foo.type.must.equal(klass)
         })
       })
     })
 
-    ;[
-      "CHARACTER",
-      "VARCHAR",
-      "VARYING CHARACTER",
-      "NCHAR",
-      "NATIVE CHARACTER",
-      "NVARCHAR",
-      "TEXT",
-      "CLOB",
-      "BLOB"
-    ].forEach(function(type) {
-      describe("given " + type, function() {
-        withSql('CREATE TABLE "test" ("foo" ' + type + ')')
+    describe("given differently cased type", function() {
+      withSql('CREATE TABLE "test" ("foo" Date)')
 
-        it("must be set to String", function() {
-          this.attrs.foo.type.must.equal(String)
-        })
-      })
-    })
-
-    describe("given BOOLEAN", function() {
-      withSql('CREATE TABLE "test" ("foo" BOOLEAN)')
-
-      it("must be set to Boolean", function() {
-        this.attrs.foo.type.must.equal(Boolean)
-      })
-    })
-
-    describe("given DATE", function() {
-      withSql('CREATE TABLE "test" ("foo" DATE)')
-
-      it("must be set to Date", function() {
-        this.attrs.foo.type.must.equal(Date)
-      })
-    })
-
-    describe("given lower-case DATE", function() {
-      withSql('CREATE TABLE "test" ("foo" date)')
-
-      it("must be set to Date", function() {
-        this.attrs.foo.type.must.equal(Date)
-      })
-    })
-
-    describe("given DATETIME", function() {
-      withSql('CREATE TABLE "test" ("foo" DATETIME)')
-
-      it("must be set to Date", function() {
+      it("must be set properly", function() {
         this.attrs.foo.type.must.equal(Date)
       })
     })
