@@ -1,6 +1,6 @@
 var _ = require("underscore")
-
 var Sqlite3 = require("sqlite3")
+
 var db = new Sqlite3.Database(":memory:")
 db.serialize()
 
@@ -173,61 +173,7 @@ describe("SQLite3", function() {
     })
 
     describe("of REAL column", function() {
-      describe("given 42.69", function() {
-        withSql('CREATE TABLE "test" ("foo" REAL DEFAULT 42.69)')
-
-        it("must be set to 42.69", function() {
-          this.attrs.foo.must.have.property("default", 42.69)
-        })
-      })
-
-      describe("given 42e3", function() {
-        withSql('CREATE TABLE "test" ("foo" REAL DEFAULT 42e3)')
-
-        it("must be set to 42000", function() {
-          this.attrs.foo.must.have.property("default", 42000)
-        })
-      })
-
-      describe("given 42.511e3", function() {
-        withSql('CREATE TABLE "test" ("foo" REAL DEFAULT 42.511e3)')
-
-        it("must be set to 42511", function() {
-          this.attrs.foo.must.have.property("default", 42511)
-        })
-      })
-
-      describe("given 42.", function() {
-        withSql('CREATE TABLE "test" ("foo" REAL DEFAULT 42.)')
-
-        it("must be set to 42", function() {
-          this.attrs.foo.must.have.property("default", 42)
-        })
-      })
-
-      describe("given .42", function() {
-        withSql('CREATE TABLE "test" ("foo" REAL DEFAULT .42)')
-
-        it("must be set to 0.42", function() {
-          this.attrs.foo.must.have.property("default", .42)
-        })
-      })
-
-      describe("given 42.e3", function() {
-        withSql('CREATE TABLE "test" ("foo" REAL DEFAULT 42.e3)')
-
-        it("must be set to 42000", function() {
-          this.attrs.foo.must.have.property("default", 42000)
-        })
-      })
-
-      describe("given -42.e3", function() {
-        withSql('CREATE TABLE "test" ("foo" REAL DEFAULT -42.e3)')
-
-        it("must be set to -42000", function() {
-          this.attrs.foo.must.have.property("default", -42000)
-        })
-      })
+      Shared.mustPassRealColumnDefault(withSql)
     })
 
     describe("of BOOLEAN column", function() {
