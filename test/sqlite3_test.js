@@ -72,29 +72,7 @@ describe("SQLite3", function() {
   })
 
   describe("default", function() {
-    describe("given NULL", function() {
-      withSql('CREATE TABLE "test" ("foo" INTEGER DEFAULT NULL)')
-
-      it("must be set to null", function() {
-        this.attrs.foo.must.have.property("default", null)
-      })
-    })
-
-    describe("given null", function() {
-      withSql('CREATE TABLE "test" ("foo" INTEGER DEFAULT null)')
-
-      it("must be set to null", function() {
-        this.attrs.foo.must.have.property("default", null)
-      })
-    })
-
-    describe("given expression", function() {
-      withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT (1 + 2))')
-
-      it("must be set to null", function() {
-        this.attrs.foo.must.have.property("default", null)
-      })
-    })
+    Shared.mustPassDefault(withSql)
 
     describe("given autoincrement", function() {
       withSql('CREATE TABLE "test" ("foo" INTEGER PRIMARY KEY AUTOINCREMENT)')
@@ -105,24 +83,10 @@ describe("SQLite3", function() {
     })
 
     describe("of TEXT column", function() {
-      describe("given string surrounded by '", function() {
-        withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'a b c\')')
-
-        it("must be set", function() {
-          this.attrs.foo.default.must.equal("a b c")
-        })
-      })
+      Shared.mustPassTextDefault(withSql)
 
       describe("given ' surrounded by \"", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'")')
-
-        it("must be set to '", function() {
-          this.attrs.foo.default.must.equal("'")
-        })
-      })
-
-      describe("given '' surrounded by '", function() {
-        withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'\'\'\')')
 
         it("must be set to '", function() {
           this.attrs.foo.default.must.equal("'")
@@ -137,27 +101,11 @@ describe("SQLite3", function() {
         })
       })
 
-      describe("given \" surrounded by '", function() {
-        withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'"\')')
-
-        it("must be set to \"", function() {
-          this.attrs.foo.default.must.equal("\"")
-        })
-      })
-
       describe("given \"\" surrounded by \"", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT """")')
 
         it("must be set to \"", function() {
           this.attrs.foo.default.must.equal("\"")
-        })
-      })
-
-      describe("given \"\" surrounded by '", function() {
-        withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'""\')')
-
-        it("must be set to \"\"", function() {
-          this.attrs.foo.default.must.equal("\"\"")
         })
       })
 
@@ -181,10 +129,12 @@ describe("SQLite3", function() {
     })
 
     describe("of REAL column", function() {
-      Shared.mustPassRealColumnDefault(withSql)
+      Shared.mustPassRealDefault(withSql)
     })
 
     describe("of BOOLEAN column", function() {
+      Shared.mustPassBooleanDefault(withSql)
+
       describe("given 1", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1)')
 

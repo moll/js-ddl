@@ -58,6 +58,70 @@ describe("PostgreSQL", function() {
     })
   })
 
+  describe("default", function() {
+    Shared.mustPassDefault(withSql)
+
+    describe("given autoincrement", function() {
+      withSql('CREATE TABLE "test" ("foo" SERIAL)')
+
+      it("must be set to null", function() {
+        this.attrs.foo.must.have.property("default", null)
+      })
+    })
+
+    describe("of TEXT column", function() {
+      Shared.mustPassTextDefault(withSql)
+    })
+
+    describe("of REAL column", function() {
+      Shared.mustPassRealDefault(withSql)
+    })
+
+    describe("of BOOLEAN column", function() {
+      Shared.mustPassBooleanDefault(withSql)
+
+      describe("given 1::boolean", function() {
+        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1::boolean)')
+
+        it("must be set to true", function() {
+          this.attrs.foo.must.have.property("default", true)
+        })
+      })
+
+      describe("given 't'::boolean", function() {
+        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'t\'::boolean)')
+
+        it("must be set to true", function() {
+          this.attrs.foo.must.have.property("default", true)
+        })
+      })
+
+      describe("given 0::boolean", function() {
+        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 0::boolean)')
+
+        it("must be set to false", function() {
+          this.attrs.foo.must.have.property("default", false)
+        })
+      })
+
+      describe("given 'f'::boolean", function() {
+        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'f\'::boolean)')
+
+        it("must be set to false", function() {
+          this.attrs.foo.must.have.property("default", false)
+        })
+      })
+
+      describe("given 42::boolean", function() {
+        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 42::boolean)')
+
+        it("must be set to null", function() {
+          this.attrs.foo.must.have.property("default", null)
+        })
+      })
+    })
+  })
+
   function withSql(sql, fn) {
     beforeEach(function(done) { db.query(sql, done) })
     beforeEach(withAttrs(function(attrs) { this.attrs = attrs }))

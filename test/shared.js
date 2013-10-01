@@ -48,7 +48,33 @@ exports.mustPassSimpleTable = function(withSql) {
   })
 }
 
-exports.mustPassRealColumnDefault = function(withSql) {
+exports.mustPassDefault = function(withSql) {
+  describe("given NULL", function() {
+    withSql('CREATE TABLE "test" ("foo" INTEGER DEFAULT NULL)')
+
+    it("must be set to null", function() {
+      this.attrs.foo.must.have.property("default", null)
+    })
+  })
+
+  describe("given null", function() {
+    withSql('CREATE TABLE "test" ("foo" INTEGER DEFAULT null)')
+
+    it("must be set to null", function() {
+      this.attrs.foo.must.have.property("default", null)
+    })
+  })
+
+  describe("given expression", function() {
+    withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT (1 + 2))')
+
+    it("must be set to null", function() {
+      this.attrs.foo.must.have.property("default", null)
+    })
+  })
+}
+
+exports.mustPassRealDefault = function(withSql) {
   describe("given 42.69", function() {
     withSql('CREATE TABLE "test" ("foo" REAL DEFAULT 42.69)')
 
@@ -102,6 +128,74 @@ exports.mustPassRealColumnDefault = function(withSql) {
 
     it("must be set to -42000", function() {
       this.attrs.foo.must.have.property("default", -42000)
+    })
+  })
+}
+
+exports.mustPassTextDefault = function(withSql) {
+  describe("given string surrounded by '", function() {
+    withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'a b c\')')
+
+    it("must be set", function() {
+      this.attrs.foo.default.must.equal("a b c")
+    })
+  })
+
+  describe("given \" surrounded by '", function() {
+    withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'"\')')
+
+    it("must be set to \"", function() {
+      this.attrs.foo.default.must.equal("\"")
+    })
+  })
+
+  describe("given '' surrounded by '", function() {
+    withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'\'\'\')')
+
+    it("must be set to '", function() {
+      this.attrs.foo.default.must.equal("'")
+    })
+  })
+
+  describe("given \"\" surrounded by '", function() {
+    withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT \'""\')')
+
+    it("must be set to \"\"", function() {
+      this.attrs.foo.default.must.equal("\"\"")
+    })
+  })
+}
+
+exports.mustPassBooleanDefault = function(withSql) {
+  describe("given true", function() {
+    withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT true)')
+
+    it("must be set to true", function() {
+      this.attrs.foo.must.have.property("default", true)
+    })
+  })
+
+  describe("given false", function() {
+    withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT false)')
+
+    it("must be set to false", function() {
+      this.attrs.foo.must.have.property("default", false)
+    })
+  })
+
+  describe("given 't'", function() {
+    withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'t\')')
+
+    it("must be set to true", function() {
+      this.attrs.foo.must.have.property("default", true)
+    })
+  })
+
+  describe("given 'f'", function() {
+    withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'f\')')
+
+    it("must be set to false", function() {
+      this.attrs.foo.must.have.property("default", false)
     })
   })
 }
