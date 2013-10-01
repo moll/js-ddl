@@ -64,8 +64,8 @@ describe("PostgreSQL", function() {
     describe("given autoincrement", function() {
       withSql('CREATE TABLE "test" ("foo" SERIAL)')
 
-      it("must be set to null", function() {
-        this.attrs.foo.must.have.property("default", null)
+      it("must be set to undefined", function() {
+        this.attrs.foo.must.have.property("default", undefined)
       })
     })
 
@@ -115,8 +115,8 @@ describe("PostgreSQL", function() {
       describe("given 42::boolean", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 42::boolean)')
 
-        it("must be set to null", function() {
-          this.attrs.foo.must.have.property("default", null)
+        it("must be set to undefined", function() {
+          this.attrs.foo.must.have.property("default", undefined)
         })
       })
     })

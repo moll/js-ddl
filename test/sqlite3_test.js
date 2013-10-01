@@ -112,8 +112,8 @@ describe("SQLite3", function() {
       describe("given custom", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT custom)')
 
-        it("must be set to null", function() {
-          this.attrs.foo.must.have.property("default", null)
+        it("must be set to undefined", function() {
+          this.attrs.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -156,8 +156,8 @@ describe("SQLite3", function() {
       describe("given 86400", function() {
         withSql('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
 
-        it("must be set to null", function() {
-          this.attrs.foo.must.have.property("default", null)
+        it("must be set to undefined", function() {
+          this.attrs.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -166,8 +166,8 @@ describe("SQLite3", function() {
       describe("given 86400", function() {
         withSql('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
 
-        it("must be set to null", function() {
-          this.attrs.foo.must.have.property("default", null)
+        it("must be set to undefined", function() {
+          this.attrs.foo.must.have.property("default", undefined)
         })
       })
     })

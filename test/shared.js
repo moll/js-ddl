@@ -68,8 +68,8 @@ exports.mustPassDefault = function(withSql) {
   describe("given expression", function() {
     withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT (1 + 2))')
 
-    it("must be set to null", function() {
-      this.attrs.foo.must.have.property("default", null)
+    it("must be set to undefined", function() {
+      this.attrs.foo.must.have.property("default", undefined)
     })
   })
 }
