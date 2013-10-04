@@ -71,6 +71,17 @@ describe("PostgreSQL", function() {
 
     describe("of TEXT column", function() {
       Shared.mustPassTextDefault(withSql)
+
+      describe("given 'unknown'::character varying", function() {
+        withSql('CREATE TABLE "test" ' +
+          '("foo" CHARACTER VARYING(255) ' +
+          'DEFAULT \'unknown\'::character varying' + 
+          ')')
+
+        it("must be set to \"unknown\"", function() {
+          this.attrs.foo.must.have.property("default", "unknown")
+        })
+      })
     })
 
     describe("of REAL column", function() {
@@ -117,6 +128,18 @@ describe("PostgreSQL", function() {
 
         it("must be set to undefined", function() {
           this.attrs.foo.must.have.property("default", undefined)
+        })
+      })
+    })
+
+    describe("of INTERVAL column", function() {
+      describe("given '00:00:00'::interval", function() {
+        withSql(
+          'CREATE TABLE "test" ("foo" INTERVAL DEFAULT \'00:00:00\'::interval)'
+        )
+
+        it("must be set to \"00:00:00\"", function() {
+          this.attrs.foo.must.have.property("default", "00:00:00")
         })
       })
     })
