@@ -35,7 +35,7 @@ Queries a PostgreSQL database table for its attributes.
 Give it a [`Pg.Client`](https://github.com/brianc/node-postgres/wiki/Client)
 for `connection`.
 
-Calls `callback` with an `error` and a [`Attributes`](#Attributes) object.
+Calls `callback` with an `error` and an [`Attributes`](#Attributes) object.
 
 **Examples**:
 ```javascript
@@ -56,7 +56,7 @@ Queries a SQLite3 database table for its attributes.
 Give it a [`Sqlite3.Database`][Sqlite.Database] for `connection`.
 [Sqlite.Database]: https://github.com/developmentseed/node-sqlite3/wiki/API
 
-Calls `callback` with an `error` and a [`Attributes`](#Attributes) object.
+Calls `callback` with an `error` and an [`Attributes`](#Attributes) object.
 
 **Examples**:
 ```javascript
