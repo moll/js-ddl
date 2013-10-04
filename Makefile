@@ -19,6 +19,19 @@ pack:
 publish:
 	npm publish
 
+# NOTE: Sorry, mocumentation is not yet published.
+doc: doc.json
+	@mkdir -p doc
+	@~/Documents/Mocumentation/bin/mocument \
+		--type yui \
+		--title Attributes \
+		--priority Attributes \
+		tmp/doc/data.json > doc/API.md
+
+doc.json:
+	@mkdir -p tmp
+	@yuidoc --exclude test,node_modules --parse-only --outdir tmp/doc .
+
 clean:
 	rm -rf tmp *.tgz
 
