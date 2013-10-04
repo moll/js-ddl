@@ -1,7 +1,7 @@
 {
 	"name": "attributes",
 	"version": "0.0.0",
-	"description": "Grab a schema of attributes, their types and other column info from the database to populate your domain models.",
+	"description": "Query a database (currently PostgreSQL or Sqlite3) for its schema — columns or attributes — and get their properties, such as name, type and default value in a common format. You can use this for e.g. introspection or preparing your domain models like Rails's Active Record does.",
 	"keywords": [
 		"rdbms",
 		"schema",

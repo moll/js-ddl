@@ -28,6 +28,17 @@ doc: doc.json
 		--priority Attributes \
 		tmp/doc/data.json > doc/API.md
 
+toc: doc.json
+	@~/Documents/Mocumentation/bin/mocument \
+		--type yui \
+		--template toc \
+		--priority Attributes \
+		--var api_url=https://github.com/moll/node-attributes/blob/master/doc/API.md \
+		tmp/doc/data.json > tmp/TOC.md
+
+	echo "/^### \[Attributes\]/,/^\$$/{/^#/r tmp/TOC.md\n/^\$$/!d;}" |\
+		sed -i "" -f /dev/stdin README.md
+
 doc.json:
 	@mkdir -p tmp
 	@yuidoc --exclude test,node_modules --parse-only --outdir tmp/doc .
