@@ -1,6 +1,6 @@
 {
 	"name": "attributes",
-	"version": "0.0.0",
+	"version": "0.1.337",
 	"description": "Query a database (currently PostgreSQL or Sqlite3) for its schema — columns or attributes — and get their properties, such as name, type and default value in a common format. You can use this for e.g. introspection or preparing your domain models like Rails's Active Record does.",
 	"keywords": [
 		"rdbms",
@@ -33,8 +33,6 @@
 
 	"main": "index.js",
 	"scripts": {"test": "make test"},
-
-	"dependencies": {},
 
 	"devDependencies": {
 		"underscore": ">= 1.5.2 < 2",
