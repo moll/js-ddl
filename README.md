@@ -22,7 +22,7 @@ writing.
 
 Installing
 ----------
-**Note**: Must.js will follow the [semantic versioning](http://semver.org/)
+**Note**: Attributes will follow the [semantic versioning](http://semver.org/)
 starting from v1.0.0.
 
 ```
