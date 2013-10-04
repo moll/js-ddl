@@ -57,7 +57,7 @@ Given the following table:
 CREATE TABLE "golfers" (
   "name" VARCHAR(255) DEFAULT 'Tiger' NOT NULL,
   "handicap" INTEGER DEFAULT 52 NOT NULL,
-  "created_at" DATETIME
+  "updated_at" DATETIME
 )
 ```
 
