@@ -1,5 +1,5 @@
 var _ = require("underscore")
-var Pg = require("pg").native
+var Pg = require("pg")
 
 Pg.defaults.host = "/tmp"
 Pg.defaults.database = "assertions_test"
