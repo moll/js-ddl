@@ -1,3 +1,5 @@
+var Ddl = require("../..")
+
 exports.mustPassSimpleTable = function(withSql) {
   withSql(
     'CREATE TABLE "test" (' +
@@ -7,6 +9,10 @@ exports.mustPassSimpleTable = function(withSql) {
       '"notes" TEXT DEFAULT \'\'' +
     ')'
   )
+
+  it("must return an instance of Ddl", function() {
+    this.ddl.must.be.an.instanceof(Ddl)
+  })
 
   it("must return all column names", function() {
     this.ddl.must.have.keys(["id", "name", "age", "notes"])

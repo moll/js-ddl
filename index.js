@@ -1,3 +1,5 @@
+module.exports = Ddl
+
 /**
  * The object returned by the per-database functions below that contains all
  * of a table's columns with the column name as the key and an
@@ -13,12 +15,13 @@
  *
  * @class Ddl
  */
+function Ddl() {}
 
-exports.__defineGetter__("sqlite3", function() {
+Ddl.__defineGetter__("sqlite3", function() {
   return require("./lib/sqlite3")
 })
 
-exports.__defineGetter__("postgresql", function() {
+Ddl.__defineGetter__("postgresql", function() {
   return require("./lib/postgresql")
 })
 
