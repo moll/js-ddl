@@ -4,7 +4,6 @@ var Sqlite3 = require("sqlite3")
 var db = new Sqlite3.Database(":memory:")
 db.serialize()
 
-var Shared = require("./shared")
 var attributes = require("..").sqlite3
 
 describe("SQLite3", function() {
@@ -12,7 +11,7 @@ describe("SQLite3", function() {
   afterEach(function(done) { db.run("ROLLBACK TRANSACTION", done) })
 
   describe("given a simple table", function() {
-    Shared.mustPassSimpleTable(withSql)
+    require("./_database_test").mustPassSimpleTable(withSql)
   })
 
   describe("type", function() {
@@ -72,7 +71,7 @@ describe("SQLite3", function() {
   })
 
   describe("default", function() {
-    Shared.mustPassDefault(withSql)
+    require("./_database_test").mustPassDefault(withSql)
 
     describe("given autoincrement", function() {
       withSql('CREATE TABLE "test" ("foo" INTEGER PRIMARY KEY AUTOINCREMENT)')
@@ -83,7 +82,7 @@ describe("SQLite3", function() {
     })
 
     describe("of TEXT column", function() {
-      Shared.mustPassTextDefault(withSql)
+      require("./_database_test").mustPassTextDefault(withSql)
 
       describe("given ' surrounded by \"", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'")')
@@ -129,11 +128,11 @@ describe("SQLite3", function() {
     })
 
     describe("of REAL column", function() {
-      Shared.mustPassRealDefault(withSql)
+      require("./_database_test").mustPassRealDefault(withSql)
     })
 
     describe("of BOOLEAN column", function() {
-      Shared.mustPassBooleanDefault(withSql)
+      require("./_database_test").mustPassBooleanDefault(withSql)
 
       describe("given 1", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1)')

@@ -8,7 +8,6 @@ var db = new Pg.Client
 before(function(done) { db.connect(done) })
 after(db.end.bind(db))
 
-var Shared = require("./shared")
 var attributes = require("..").postgresql
 
 describe("PostgreSQL", function() {
@@ -16,7 +15,7 @@ describe("PostgreSQL", function() {
   afterEach(function(done) { db.query("ROLLBACK", done) })
 
   describe("given a simple table", function() {
-    Shared.mustPassSimpleTable(withSql)
+    require("./_database_test").mustPassSimpleTable(withSql)
   })
 
   describe("type", function() {
@@ -59,7 +58,7 @@ describe("PostgreSQL", function() {
   })
 
   describe("default", function() {
-    Shared.mustPassDefault(withSql)
+    require("./_database_test").mustPassDefault(withSql)
 
     describe("given autoincrement", function() {
       withSql('CREATE TABLE "test" ("foo" SERIAL)')
@@ -70,7 +69,7 @@ describe("PostgreSQL", function() {
     })
 
     describe("of TEXT column", function() {
-      Shared.mustPassTextDefault(withSql)
+      require("./_database_test").mustPassTextDefault(withSql)
 
       describe("given 'unknown'::character varying", function() {
         withSql('CREATE TABLE "test" ' +
@@ -85,11 +84,11 @@ describe("PostgreSQL", function() {
     })
 
     describe("of REAL column", function() {
-      Shared.mustPassRealDefault(withSql)
+      require("./_database_test").mustPassRealDefault(withSql)
     })
 
     describe("of BOOLEAN column", function() {
-      Shared.mustPassBooleanDefault(withSql)
+      require("./_database_test").mustPassBooleanDefault(withSql)
 
       describe("given 1::boolean", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1::boolean)')
