@@ -47,7 +47,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" ' + type + ')')
 
         it("must be set to " + klass.name, function() {
-          this.attrs.foo.type.must.equal(klass)
+          this.ddl.foo.type.must.equal(klass)
         })
       })
     })
@@ -56,7 +56,7 @@ describe("Ddl.sqlite3", function() {
       withSql('CREATE TABLE "test" ("foo" Date)')
 
       it("must be set properly", function() {
-        this.attrs.foo.type.must.equal(Date)
+        this.ddl.foo.type.must.equal(Date)
       })
     })
 
@@ -64,7 +64,7 @@ describe("Ddl.sqlite3", function() {
       withSql('CREATE TABLE "test" ("foo" CUSTOM)')
 
       it("must be set to String", function() {
-        this.attrs.foo.type.must.equal(String)
+        this.ddl.foo.type.must.equal(String)
       })
     })
   })
@@ -76,7 +76,7 @@ describe("Ddl.sqlite3", function() {
       withSql('CREATE TABLE "test" ("foo" INTEGER PRIMARY KEY AUTOINCREMENT)')
 
       it("must be set to null", function() {
-        this.attrs.foo.must.have.property("default", null)
+        this.ddl.foo.must.have.property("default", null)
       })
     })
 
@@ -87,7 +87,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'")')
 
         it("must be set to '", function() {
-          this.attrs.foo.default.must.equal("'")
+          this.ddl.foo.default.must.equal("'")
         })
       })
 
@@ -95,7 +95,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'\'")')
 
         it("must be set to ''", function() {
-          this.attrs.foo.default.must.equal("''")
+          this.ddl.foo.default.must.equal("''")
         })
       })
 
@@ -103,7 +103,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT """")')
 
         it("must be set to \"", function() {
-          this.attrs.foo.default.must.equal("\"")
+          this.ddl.foo.default.must.equal("\"")
         })
       })
 
@@ -111,7 +111,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT custom)')
 
         it("must be set to undefined", function() {
-          this.attrs.foo.must.have.property("default", undefined)
+          this.ddl.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -121,7 +121,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" INTEGER DEFAULT 42)')
 
         it("must be set to 42", function() {
-          this.attrs.foo.must.have.property("default", 42)
+          this.ddl.foo.must.have.property("default", 42)
         })
       })
     })
@@ -137,7 +137,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1)')
 
         it("must be set to true", function() {
-          this.attrs.foo.must.have.property("default", true)
+          this.ddl.foo.must.have.property("default", true)
         })
       })
 
@@ -145,7 +145,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 0)')
 
         it("must be set to false", function() {
-          this.attrs.foo.must.have.property("default", false)
+          this.ddl.foo.must.have.property("default", false)
         })
       })
     })
@@ -155,7 +155,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
 
         it("must be set to undefined", function() {
-          this.attrs.foo.must.have.property("default", undefined)
+          this.ddl.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -165,7 +165,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
 
         it("must be set to undefined", function() {
-          this.attrs.foo.must.have.property("default", undefined)
+          this.ddl.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -175,7 +175,7 @@ describe("Ddl.sqlite3", function() {
         withSql('CREATE TABLE "test" ("foo" CUSTOM DEFAULT \'a b c\')')
 
         it("must be set", function() {
-          this.attrs.foo.default.must.equal("a b c")
+          this.ddl.foo.default.must.equal("a b c")
         })
       })
     })
@@ -183,15 +183,15 @@ describe("Ddl.sqlite3", function() {
 
   function withSql(sql, fn) {
     beforeEach(db.run.bind(db, sql))
-    beforeEach(withAttrs(function(attrs) { this.attrs = attrs }))
+    beforeEach(withDdl(function(ddl) { this.ddl = ddl }))
   }
 
-  function withAttrs(fn) {
+  function withDdl(fn) {
     return function(done) {
       var self = this
-      ddl(db, "test", function(err, attrs) {
+      ddl(db, "test", function(err, ddl) {
         if (err) return done(err)
-        fn.call(self, attrs)
+        fn.call(self, ddl)
         done()
       })
     }

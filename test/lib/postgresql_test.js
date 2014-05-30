@@ -39,7 +39,7 @@ describe("Ddl.postgresql", function() {
         withSql('CREATE TABLE "test" ("foo" ' + type + ')')
 
         it("must be set to " + klass.name, function() {
-          this.attrs.foo.type.must.equal(klass)
+          this.ddl.foo.type.must.equal(klass)
         })
       })
     })
@@ -48,7 +48,7 @@ describe("Ddl.postgresql", function() {
       withSql('CREATE TABLE "test" ("foo" Date)')
 
       it("must be set properly", function() {
-        this.attrs.foo.type.must.equal(Date)
+        this.ddl.foo.type.must.equal(Date)
       })
     })
   })
@@ -60,7 +60,7 @@ describe("Ddl.postgresql", function() {
       withSql('CREATE TABLE "test" ("foo" SERIAL)')
 
       it("must be set to undefined", function() {
-        this.attrs.foo.must.have.property("default", undefined)
+        this.ddl.foo.must.have.property("default", undefined)
       })
     })
 
@@ -74,7 +74,7 @@ describe("Ddl.postgresql", function() {
           ')')
 
         it("must be set to \"unknown\"", function() {
-          this.attrs.foo.must.have.property("default", "unknown")
+          this.ddl.foo.must.have.property("default", "unknown")
         })
       })
     })
@@ -90,7 +90,7 @@ describe("Ddl.postgresql", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1::boolean)')
 
         it("must be set to true", function() {
-          this.attrs.foo.must.have.property("default", true)
+          this.ddl.foo.must.have.property("default", true)
         })
       })
 
@@ -98,7 +98,7 @@ describe("Ddl.postgresql", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'t\'::boolean)')
 
         it("must be set to true", function() {
-          this.attrs.foo.must.have.property("default", true)
+          this.ddl.foo.must.have.property("default", true)
         })
       })
 
@@ -106,7 +106,7 @@ describe("Ddl.postgresql", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 0::boolean)')
 
         it("must be set to false", function() {
-          this.attrs.foo.must.have.property("default", false)
+          this.ddl.foo.must.have.property("default", false)
         })
       })
 
@@ -114,7 +114,7 @@ describe("Ddl.postgresql", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'f\'::boolean)')
 
         it("must be set to false", function() {
-          this.attrs.foo.must.have.property("default", false)
+          this.ddl.foo.must.have.property("default", false)
         })
       })
 
@@ -122,7 +122,7 @@ describe("Ddl.postgresql", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 42::boolean)')
 
         it("must be set to undefined", function() {
-          this.attrs.foo.must.have.property("default", undefined)
+          this.ddl.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -134,7 +134,7 @@ describe("Ddl.postgresql", function() {
         )
 
         it("must be set to \"00:00:00\"", function() {
-          this.attrs.foo.must.have.property("default", "00:00:00")
+          this.ddl.foo.must.have.property("default", "00:00:00")
         })
       })
     })
@@ -142,15 +142,15 @@ describe("Ddl.postgresql", function() {
 
   function withSql(sql, fn) {
     beforeEach(function(done) { db.query(sql, done) })
-    beforeEach(withAttrs(function(attrs) { this.attrs = attrs }))
+    beforeEach(withAttrs(function(ddl) { this.ddl = ddl }))
   }
 
   function withAttrs(fn) {
     return function(done) {
       var self = this
-      ddl(db, "test", function(err, attrs) {
+      ddl(db, "test", function(err, ddl) {
         if (err) return done(err)
-        fn.call(self, attrs)
+        fn.call(self, ddl)
         done()
       })
     }
