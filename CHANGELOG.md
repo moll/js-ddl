@@ -1,4 +1,4 @@
-## Unreleased
+## 1.0.0 (May 30, 2014)
 - Renamed from Attributes.js to DDL.js.
 - Returns an instance of [`Ddl`][] from [`Ddl.sqlite3`][] and
   [`Ddl.postgresql`][] for future compatibility.
