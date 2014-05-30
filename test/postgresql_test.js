@@ -1,16 +1,12 @@
 var _ = require("underscore")
 var Pg = require("pg")
+var ddl = require("..").postgresql
 
-Pg.defaults.host = "/tmp"
-Pg.defaults.database = "assertions_test"
-
-var db = new Pg.Client
-before(function(done) { db.connect(done) })
+var db = new Pg.Client({host: "/tmp", database: "ddl_test"})
+before(db.connect.bind(db))
 after(db.end.bind(db))
 
-var attributes = require("..").postgresql
-
-describe("PostgreSQL", function() {
+describe("Ddl.postgresql", function() {
   beforeEach(function(done) { db.query("BEGIN", done) })
   afterEach(function(done) { db.query("ROLLBACK", done) })
 
@@ -152,7 +148,7 @@ describe("PostgreSQL", function() {
   function withAttrs(fn) {
     return function(done) {
       var self = this
-      attributes(db, "test", function(err, attrs) {
+      ddl(db, "test", function(err, attrs) {
         if (err) return done(err)
         fn.call(self, attrs)
         done()

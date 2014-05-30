@@ -1,12 +1,11 @@
 var _ = require("underscore")
 var Sqlite3 = require("sqlite3")
+var ddl = require("..").sqlite3
 
 var db = new Sqlite3.Database(":memory:")
 db.serialize()
 
-var attributes = require("..").sqlite3
-
-describe("SQLite3", function() {
+describe("Ddl.sqlite3", function() {
   beforeEach(function(done) { db.run("BEGIN TRANSACTION", done) })
   afterEach(function(done) { db.run("ROLLBACK TRANSACTION", done) })
 
@@ -190,7 +189,7 @@ describe("SQLite3", function() {
   function withAttrs(fn) {
     return function(done) {
       var self = this
-      attributes(db, "test", function(err, attrs) {
+      ddl(db, "test", function(err, attrs) {
         if (err) return done(err)
         fn.call(self, attrs)
         done()
