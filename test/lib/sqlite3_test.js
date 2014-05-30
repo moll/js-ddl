@@ -1,6 +1,6 @@
 var _ = require("underscore")
 var Sqlite3 = require("sqlite3")
-var ddl = require("..").sqlite3
+var ddl = require("../..").sqlite3
 
 var db = new Sqlite3.Database(":memory:")
 db.serialize()

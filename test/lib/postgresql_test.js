@@ -1,6 +1,6 @@
 var _ = require("underscore")
 var Pg = require("pg")
-var ddl = require("..").postgresql
+var ddl = require("../..").postgresql
 
 var db = new Pg.Client({host: "/tmp", database: "ddl_test"})
 before(db.connect.bind(db))
