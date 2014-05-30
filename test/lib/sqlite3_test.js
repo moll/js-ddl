@@ -1,18 +1,16 @@
 var _ = require("underscore")
 var Sqlite3 = require("sqlite3")
+var ddl = require("../..").sqlite3
 
 var db = new Sqlite3.Database(":memory:")
 db.serialize()
 
-var Shared = require("./shared")
-var attributes = require("..").sqlite3
-
-describe("SQLite3", function() {
+describe("Ddl.sqlite3", function() {
   beforeEach(function(done) { db.run("BEGIN TRANSACTION", done) })
   afterEach(function(done) { db.run("ROLLBACK TRANSACTION", done) })
 
   describe("given a simple table", function() {
-    Shared.mustPassSimpleTable(withSql)
+    require("./_database_test").mustPassSimpleTable(withSql)
   })
 
   describe("type", function() {
@@ -49,7 +47,7 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" ' + type + ')')
 
         it("must be set to " + klass.name, function() {
-          this.attrs.foo.type.must.equal(klass)
+          this.ddl.foo.type.must.equal(klass)
         })
       })
     })
@@ -58,7 +56,7 @@ describe("SQLite3", function() {
       withSql('CREATE TABLE "test" ("foo" Date)')
 
       it("must be set properly", function() {
-        this.attrs.foo.type.must.equal(Date)
+        this.ddl.foo.type.must.equal(Date)
       })
     })
 
@@ -66,30 +64,30 @@ describe("SQLite3", function() {
       withSql('CREATE TABLE "test" ("foo" CUSTOM)')
 
       it("must be set to String", function() {
-        this.attrs.foo.type.must.equal(String)
+        this.ddl.foo.type.must.equal(String)
       })
     })
   })
 
   describe("default", function() {
-    Shared.mustPassDefault(withSql)
+    require("./_database_test").mustPassDefault(withSql)
 
     describe("given autoincrement", function() {
       withSql('CREATE TABLE "test" ("foo" INTEGER PRIMARY KEY AUTOINCREMENT)')
 
       it("must be set to null", function() {
-        this.attrs.foo.must.have.property("default", null)
+        this.ddl.foo.must.have.property("default", null)
       })
     })
 
     describe("of TEXT column", function() {
-      Shared.mustPassTextDefault(withSql)
+      require("./_database_test").mustPassTextDefault(withSql)
 
       describe("given ' surrounded by \"", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'")')
 
         it("must be set to '", function() {
-          this.attrs.foo.default.must.equal("'")
+          this.ddl.foo.default.must.equal("'")
         })
       })
 
@@ -97,7 +95,7 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'\'")')
 
         it("must be set to ''", function() {
-          this.attrs.foo.default.must.equal("''")
+          this.ddl.foo.default.must.equal("''")
         })
       })
 
@@ -105,7 +103,7 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT """")')
 
         it("must be set to \"", function() {
-          this.attrs.foo.default.must.equal("\"")
+          this.ddl.foo.default.must.equal("\"")
         })
       })
 
@@ -113,7 +111,7 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT custom)')
 
         it("must be set to undefined", function() {
-          this.attrs.foo.must.have.property("default", undefined)
+          this.ddl.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -123,23 +121,23 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" INTEGER DEFAULT 42)')
 
         it("must be set to 42", function() {
-          this.attrs.foo.must.have.property("default", 42)
+          this.ddl.foo.must.have.property("default", 42)
         })
       })
     })
 
     describe("of REAL column", function() {
-      Shared.mustPassRealDefault(withSql)
+      require("./_database_test").mustPassRealDefault(withSql)
     })
 
     describe("of BOOLEAN column", function() {
-      Shared.mustPassBooleanDefault(withSql)
+      require("./_database_test").mustPassBooleanDefault(withSql)
 
       describe("given 1", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1)')
 
         it("must be set to true", function() {
-          this.attrs.foo.must.have.property("default", true)
+          this.ddl.foo.must.have.property("default", true)
         })
       })
 
@@ -147,7 +145,7 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 0)')
 
         it("must be set to false", function() {
-          this.attrs.foo.must.have.property("default", false)
+          this.ddl.foo.must.have.property("default", false)
         })
       })
     })
@@ -157,7 +155,7 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
 
         it("must be set to undefined", function() {
-          this.attrs.foo.must.have.property("default", undefined)
+          this.ddl.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -167,7 +165,7 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
 
         it("must be set to undefined", function() {
-          this.attrs.foo.must.have.property("default", undefined)
+          this.ddl.foo.must.have.property("default", undefined)
         })
       })
     })
@@ -177,7 +175,7 @@ describe("SQLite3", function() {
         withSql('CREATE TABLE "test" ("foo" CUSTOM DEFAULT \'a b c\')')
 
         it("must be set", function() {
-          this.attrs.foo.default.must.equal("a b c")
+          this.ddl.foo.default.must.equal("a b c")
         })
       })
     })
@@ -185,15 +183,15 @@ describe("SQLite3", function() {
 
   function withSql(sql, fn) {
     beforeEach(db.run.bind(db, sql))
-    beforeEach(withAttrs(function(attrs) { this.attrs = attrs }))
+    beforeEach(withDdl(function(ddl) { this.ddl = ddl }))
   }
 
-  function withAttrs(fn) {
+  function withDdl(fn) {
     return function(done) {
       var self = this
-      attributes(db, "test", function(err, attrs) {
+      ddl(db, "test", function(err, ddl) {
         if (err) return done(err)
-        fn.call(self, attrs)
+        fn.call(self, ddl)
         done()
       })
     }

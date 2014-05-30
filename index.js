@@ -1,29 +1,33 @@
+module.exports = Ddl
+
 /**
  * The object returned by the per-database functions below that contains all
- * of a table's attributes (columns) with the column name as the key and an
+ * of a table's columns with the column name as the key and an
  * [`Attribute`](#Attribute) object as the value.
  *
- * All attributes of the table are set as enumerable properties of the object.
+ * All columns of the table are set as enumerable properties of the object.
  * To go over them, just use a `for in` loop.
  *
  * @example
- * Attributes.sqlite3(db, "people", function(err, attrs) {
- *   for (name in attrs) console.log(name, attrs[name].type)
+ * Ddl.sqlite3(db, "people", function(err, ddl) {
+ *   for (name in ddl) console.log(name, ddl[name].type)
  * })
  *
- * @class Attributes
+ * @class Ddl
  */
+function Ddl() {}
 
-exports.__defineGetter__("sqlite3", function() {
+Ddl.__defineGetter__("sqlite3", function() {
   return require("./lib/sqlite3")
 })
 
-exports.__defineGetter__("postgresql", function() {
+Ddl.__defineGetter__("postgresql", function() {
   return require("./lib/postgresql")
 })
 
 /**
- * The object specifying all of a single column's properties.
+ * The object specifying all properties of a single attribute or database
+ * column.
  *
  * @class Attribute
  */
@@ -70,7 +74,7 @@ exports.__defineGetter__("postgresql", function() {
  *
  * If the default value's format is not supported, it'll be set to `undefined`.
  * For the most part that is the safest thing — this way when you're later
- * inserting data, leave out undefined attributes and they'll be properly set by
+ * inserting data, leave out undefined columns and they'll be properly set by
  * the database.
  *
  * Column SQL                | Default

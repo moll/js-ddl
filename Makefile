@@ -1,54 +1,61 @@
-NODE_OPTS :=
-TEST_OPTS :=
+NODE_OPTS =
+TEST_OPTS =
 
 love:
 	@echo "Feel like makin' love."
 
 test:
-	@node $(NODE_OPTS) ./node_modules/.bin/mocha -R dot $(TEST_OPTS)
+	@node $(NODE_OPTS) ./node_modules/.bin/_mocha -R dot $(TEST_OPTS)
 
 spec: 
-	@node $(NODE_OPTS) ./node_modules/.bin/mocha -R spec $(TEST_OPTS)
+	@node $(NODE_OPTS) ./node_modules/.bin/_mocha -R spec $(TEST_OPTS)
 
 autotest:
-	@node $(NODE_OPTS) ./node_modules/.bin/mocha -R spec --watch $(TEST_OPTS)
+	@node $(NODE_OPTS) ./node_modules/.bin/_mocha -R dot --watch $(TEST_OPTS)
 
+autospec:
+	@node $(NODE_OPTS) ./node_modules/.bin/_mocha -R spec --watch $(TEST_OPTS)
 pack:
 	npm pack
 
 publish:
 	npm publish
 
+tag:
+	git tag "v$$(node -e 'console.log(require("./package").version)')"
+
 # NOTE: Sorry, mocumentation is not yet published.
-doc: doc.json
+doc: tmp/doc.json
 	@mkdir -p doc
 	@~/Documents/Mocumentation/bin/mocument \
 		--type yui \
-		--title Attributes \
-		--priority Attributes \
-		tmp/doc/data.json > doc/API.md
+		--title DDL.js \
+		--priority Ddl \
+		tmp/data.json > doc/API.md
 
-toc: doc.json
+toc: tmp/doc.json
 	@~/Documents/Mocumentation/bin/mocument \
 		--type yui \
 		--template toc \
-		--priority Attributes \
-		--var api_url=https://github.com/moll/node-attributes/blob/master/doc/API.md \
-		tmp/doc/data.json > tmp/TOC.md
+		--priority Ddl \
+		--var api_url=https://github.com/moll/js-ddl/blob/master/doc/API.md \
+		tmp/data.json > tmp/TOC.md
 
-	echo "/^### \[Attributes\]/,/^\$$/{/^#/r tmp/TOC.md\n/^\$$/!d;}" |\
-		sed -i "" -f /dev/stdin README.md
+	echo "1{h;d;};1!{x;G;};/^### \[[[:alpha:]]+\]/,/^\\\n\$$/{/^\\\n\$$/{r tmp/TOC.md\n;a\\\\\n\\\\\n\n;};d;};\$$!P;\$$p;d" |\
+		sed -i "" -E -f /dev/stdin README.md
 
-doc.json:
+tmp/doc.json:
 	@mkdir -p tmp
-	@yuidoc --exclude test,node_modules --parse-only --outdir tmp/doc .
+	@yuidoc --exclude test,node_modules --parse-only --outdir tmp .
+
+createdb:
+	createdb -E utf8 -T template0 ddl_test
 
 clean:
 	rm -rf tmp *.tgz
 
-createdb:
-	createdb -E utf8 -T template0 assertions_test
-
-.PHONY: love test spec autotest
-.PHONY: pack publish clean
+.PHONY: love
+.PHONY: test spec autotest autospec
+.PHONY: pack publish tag
 .PHONY: createdb
+.PHONY: clean
