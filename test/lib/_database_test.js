@@ -111,7 +111,7 @@ exports.mustPassRealDefault = function(withSql) {
     withSql('CREATE TABLE "test" ("foo" REAL DEFAULT .42)')
 
     it("must be set to 0.42", function() {
-      this.ddl.foo.must.have.property("default", .42)
+      this.ddl.foo.must.have.property("default", 0.42)
     })
   })
 
