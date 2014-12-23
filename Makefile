@@ -51,11 +51,14 @@ tmp/doc.json:
 createdb:
 	createdb -E utf8 -T template0 ddl_test
 
+dropdb:
+	dropdb ddl_test
+
 clean:
 	rm -rf tmp *.tgz
 
 .PHONY: love
 .PHONY: test spec autotest autospec
 .PHONY: pack publish tag
-.PHONY: createdb
+.PHONY: createdb dropdb
 .PHONY: clean
