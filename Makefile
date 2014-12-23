@@ -15,8 +15,9 @@ autotest:
 
 autospec:
 	@node $(NODE_OPTS) ./node_modules/.bin/_mocha -R spec --watch $(TEST_OPTS)
+
 pack:
-	npm pack
+	@file=$$(npm pack); echo "$$file"; tar tf "$$file"
 
 publish:
 	npm publish
