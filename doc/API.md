@@ -41,7 +41,7 @@ Calls `callback` with an `error` and a [`Ddl`](#Ddl) object with attributes.
 var Ddl = require("ddl")
 var Pg = require("pg")
 
-var db = new Pg.Client({host: "/tmp", database: "world"})
+var db = new Pg.Client("postgresql://localhost/world")
 db.connect()
 
 Ddl.postgresql(db, "people", console.log)

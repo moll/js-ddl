@@ -2,7 +2,7 @@ var _ = require("underscore")
 var Pg = require("pg")
 var denodeify = require("denodeify")
 
-var db = new Pg.Client({host: "/tmp", database: "ddl_test"})
+var db = new Pg.Client("postgresql://localhost/ddl_test")
 before(db.connect.bind(db))
 after(db.end.bind(db))
 
