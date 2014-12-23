@@ -1,16 +1,19 @@
 var _ = require("underscore")
 var Sqlite3 = require("sqlite3")
-var ddl = require("../..").sqlite3
+var denodeify = require("denodeify")
 
 var db = new Sqlite3.Database(":memory:")
 db.serialize()
 
+var query = denodeify(db.run.bind(db))
+var define = denodeify(require("../..").sqlite3.bind(null, db))
+
 describe("Ddl.sqlite3", function() {
-  beforeEach(function(done) { db.run("BEGIN TRANSACTION", done) })
-  afterEach(function(done) { db.run("ROLLBACK TRANSACTION", done) })
+  beforeEach(function*() { yield query("BEGIN TRANSACTION") })
+  afterEach(function*() { yield query("ROLLBACK TRANSACTION") })
 
   describe("given a simple table", function() {
-    require("./_database_test").mustPassSimpleTable(withSql)
+    require("./_database_test").mustPassSimpleTable(query, define)
   })
 
   describe("type", function() {
@@ -43,157 +46,103 @@ describe("Ddl.sqlite3", function() {
       VARCHAR: String,
       "VARYING CHARACTER": String,
     }).each(function(klass, type) {
-      describe("given " + type, function() {
-        withSql('CREATE TABLE "test" ("foo" ' + type + ')')
-
-        it("must be set to " + klass.name, function() {
-          this.ddl.foo.type.must.equal(klass)
-        })
+      it("must be set to " + klass.name + "given " + type, function*() {
+        yield query('CREATE TABLE "test" ("foo" ' + type + ')')
+        ;(yield define("test")).foo.type.must.equal(klass)
       })
     })
 
-    describe("given differently cased type", function() {
-      withSql('CREATE TABLE "test" ("foo" Date)')
-
-      it("must be set properly", function() {
-        this.ddl.foo.type.must.equal(Date)
-      })
+    it("must be set properly given differently cased type", function*() {
+      yield query('CREATE TABLE "test" ("foo" Date)')
+      ;(yield define("test")).foo.type.must.equal(Date)
     })
 
-    describe("given CUSTOM", function() {
-      withSql('CREATE TABLE "test" ("foo" CUSTOM)')
-
-      it("must be set to String", function() {
-        this.ddl.foo.type.must.equal(String)
-      })
+    it("must be set to String given CUSTOM", function*() {
+      yield query('CREATE TABLE "test" ("foo" CUSTOM)')
+      ;(yield define("test")).foo.type.must.equal(String)
     })
   })
 
   describe("default", function() {
-    require("./_database_test").mustPassDefault(withSql)
+    require("./_database_test").mustPassDefault(query, define)
 
-    describe("given autoincrement", function() {
-      withSql('CREATE TABLE "test" ("foo" INTEGER PRIMARY KEY AUTOINCREMENT)')
+    it("must be set to null given autoincrement", function*() {
+      yield query(
+        'CREATE TABLE "test" (' +
+        '"foo" INTEGER PRIMARY KEY AUTOINCREMENT' +
+      ')')
 
-      it("must be set to null", function() {
-        this.ddl.foo.must.have.property("default", null)
-      })
+      ;(yield define("test")).foo.must.have.property("default", null)
     })
 
     describe("of TEXT column", function() {
-      require("./_database_test").mustPassTextDefault(withSql)
+      require("./_database_test").mustPassTextDefault(query, define)
 
-      describe("given ' surrounded by \"", function() {
-        withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'")')
-
-        it("must be set to '", function() {
-          this.ddl.foo.default.must.equal("'")
-        })
+      it("must be set to ' given ' surrounded by \"", function*() {
+        yield query('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'")')
+        ;(yield define("test")).foo.default.must.equal("'")
       })
 
-      describe("given '' surrounded by \"", function() {
-        withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'\'")')
-
-        it("must be set to ''", function() {
-          this.ddl.foo.default.must.equal("''")
-        })
+      it("must be set to '' given '' surrounded by \"", function*() {
+        yield query('CREATE TABLE "test" ("foo" TEXT DEFAULT "\'\'")')
+        ;(yield define("test")).foo.default.must.equal("''")
       })
 
-      describe("given \"\" surrounded by \"", function() {
-        withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT """")')
-
-        it("must be set to \"", function() {
-          this.ddl.foo.default.must.equal("\"")
-        })
+      it("must be set to \" given \"\" surrounded by \"", function*() {
+        yield query('CREATE TABLE "test" ("foo" TEXT DEFAULT """")')
+        ;(yield define("test")).foo.default.must.equal("\"")
       })
 
-      describe("given custom", function() {
-        withSql('CREATE TABLE "test" ("foo" TEXT DEFAULT custom)')
-
-        it("must be set to undefined", function() {
-          this.ddl.foo.must.have.property("default", undefined)
-        })
+      it("must be set to undefined given custom", function*() {
+        yield query('CREATE TABLE "test" ("foo" TEXT DEFAULT custom)')
+        ;(yield define("test")).foo.must.have.property("default", undefined)
       })
     })
 
     describe("of INTEGER column", function() {
-      describe("given 42", function() {
-        withSql('CREATE TABLE "test" ("foo" INTEGER DEFAULT 42)')
-
-        it("must be set to 42", function() {
-          this.ddl.foo.must.have.property("default", 42)
-        })
+      it("must be set to 42 given 42", function*() {
+        yield query('CREATE TABLE "test" ("foo" INTEGER DEFAULT 42)')
+        ;(yield define("test")).foo.must.have.property("default", 42)
       })
     })
 
     describe("of REAL column", function() {
-      require("./_database_test").mustPassRealDefault(withSql)
+      require("./_database_test").mustPassRealDefault(query, define)
     })
 
     describe("of BOOLEAN column", function() {
-      require("./_database_test").mustPassBooleanDefault(withSql)
+      require("./_database_test").mustPassBooleanDefault(query, define)
 
-      describe("given 1", function() {
-        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1)')
-
-        it("must be set to true", function() {
-          this.ddl.foo.must.have.property("default", true)
-        })
+      it("must be set to true given 1", function*() {
+        yield query('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1)')
+        ;(yield define("test")).foo.must.have.property("default", true)
       })
 
-      describe("given 0", function() {
-        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 0)')
-
-        it("must be set to false", function() {
-          this.ddl.foo.must.have.property("default", false)
-        })
+      it("must be set to false given 0", function*() {
+        yield query('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 0)')
+        ;(yield define("test")).foo.must.have.property("default", false)
       })
     })
 
     describe("of DATE column", function() {
-      describe("given 86400", function() {
-        withSql('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
-
-        it("must be set to undefined", function() {
-          this.ddl.foo.must.have.property("default", undefined)
-        })
+      it("must be set to undefined given 86400", function*() {
+        yield query('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
+        ;(yield define("test")).foo.must.have.property("default", undefined)
       })
     })
 
     describe("of DATETIME column", function() {
-      describe("given 86400", function() {
-        withSql('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
-
-        it("must be set to undefined", function() {
-          this.ddl.foo.must.have.property("default", undefined)
-        })
+      it("must be set to undefined given 86400", function*() {
+        yield query('CREATE TABLE "test" ("foo" DATETIME DEFAULT 86400)')
+        ;(yield define("test")).foo.must.have.property("default", undefined)
       })
     })
 
     describe("of CUSTOM column", function() {
-      describe("given string surrounded by '", function() {
-        withSql('CREATE TABLE "test" ("foo" CUSTOM DEFAULT \'a b c\')')
-
-        it("must be set", function() {
-          this.ddl.foo.default.must.equal("a b c")
-        })
+      it("must be set given string surrounded by '", function*() {
+        yield query('CREATE TABLE "test" ("foo" CUSTOM DEFAULT \'a b c\')')
+        ;(yield define("test")).foo.default.must.equal("a b c")
       })
     })
   })
-
-  function withSql(sql, fn) {
-    beforeEach(db.run.bind(db, sql))
-    beforeEach(withDdl(function(ddl) { this.ddl = ddl }))
-  }
-
-  function withDdl(fn) {
-    return function(done) {
-      var self = this
-      ddl(db, "test", function(err, ddl) {
-        if (err) return done(err)
-        fn.call(self, ddl)
-        done()
-      })
-    }
-  }
 })

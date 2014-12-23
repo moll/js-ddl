@@ -1,17 +1,20 @@
 var _ = require("underscore")
 var Pg = require("pg")
-var ddl = require("../..").postgresql
+var denodeify = require("denodeify")
 
 var db = new Pg.Client({host: "/tmp", database: "ddl_test"})
 before(db.connect.bind(db))
 after(db.end.bind(db))
 
+var query = denodeify(db.query.bind(db))
+var define = denodeify(require("../..").postgresql.bind(null, db))
+
 describe("Ddl.postgresql", function() {
-  beforeEach(function(done) { db.query("BEGIN", done) })
-  afterEach(function(done) { db.query("ROLLBACK", done) })
+  beforeEach(function*() { yield query("BEGIN") })
+  afterEach(function*() { yield query("ROLLBACK") })
 
   describe("given a simple table", function() {
-    require("./_database_test").mustPassSimpleTable(withSql)
+    require("./_database_test").mustPassSimpleTable(query, define)
   })
 
   describe("type", function() {
@@ -35,124 +38,81 @@ describe("Ddl.postgresql", function() {
       TIMESTAMP: Date,
       "TIMESTAMP WITHOUT TIME ZONE": Date
     }).each(function(klass, type) {
-      describe("given " + type, function() {
-        withSql('CREATE TABLE "test" ("foo" ' + type + ')')
-
-        it("must be set to " + klass.name, function() {
-          this.ddl.foo.type.must.equal(klass)
-        })
+      it("must be set to " + klass.name + " given " + type, function*() {
+        yield query('CREATE TABLE "test" ("foo" ' + type + ')')
+        ;(yield define("test")).foo.type.must.equal(klass)
       })
     })
 
-    describe("given differently cased type", function() {
-      withSql('CREATE TABLE "test" ("foo" Date)')
-
-      it("must be set properly", function() {
-        this.ddl.foo.type.must.equal(Date)
-      })
+    it("must be set properly given differently cased type", function*() {
+      yield query('CREATE TABLE "test" ("foo" Date)')
+      ;(yield define("test")).foo.type.must.equal(Date)
     })
   })
 
   describe("default", function() {
-    require("./_database_test").mustPassDefault(withSql)
+    require("./_database_test").mustPassDefault(query, define)
 
-    describe("given autoincrement", function() {
-      withSql('CREATE TABLE "test" ("foo" SERIAL)')
-
-      it("must be set to undefined", function() {
-        this.ddl.foo.must.have.property("default", undefined)
-      })
+    it("must be set to undefined given autoincrement", function*() {
+      yield query('CREATE TABLE "test" ("foo" SERIAL)')
+      ;(yield define("test")).foo.must.have.property("default", undefined)
     })
 
     describe("of TEXT column", function() {
-      require("./_database_test").mustPassTextDefault(withSql)
+      require("./_database_test").mustPassTextDefault(query, define)
 
-      describe("given 'unknown'::character varying", function() {
-        withSql('CREATE TABLE "test" ' +
-          '("foo" CHARACTER VARYING(255) ' +
-          'DEFAULT \'unknown\'::character varying' + 
-          ')')
+      it("must be set to \"unknown\" given 'unknown'::character varying",
+        function*() {
+        yield query('CREATE TABLE "test" ' +
+                    '("foo" CHARACTER VARYING(255) ' +
+                    'DEFAULT \'unknown\'::character varying' + 
+                    ')')
 
-        it("must be set to \"unknown\"", function() {
-          this.ddl.foo.must.have.property("default", "unknown")
-        })
+        ;(yield define("test")).foo.must.have.property("default", "unknown")
       })
     })
 
     describe("of REAL column", function() {
-      require("./_database_test").mustPassRealDefault(withSql)
+      require("./_database_test").mustPassRealDefault(query, define)
     })
 
     describe("of BOOLEAN column", function() {
-      require("./_database_test").mustPassBooleanDefault(withSql)
+      require("./_database_test").mustPassBooleanDefault(query, define)
 
-      describe("given 1::boolean", function() {
-        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1::boolean)')
-
-        it("must be set to true", function() {
-          this.ddl.foo.must.have.property("default", true)
-        })
+      it("must be set to true given 1::boolean", function*() {
+        yield query('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 1::boolean)')
+        ;(yield define("test")).foo.must.have.property("default", true)
       })
 
-      describe("given 't'::boolean", function() {
-        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'t\'::boolean)')
-
-        it("must be set to true", function() {
-          this.ddl.foo.must.have.property("default", true)
-        })
+      it("must be set to true given 't'::boolean", function*() {
+        yield query('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'t\'::boolean)')
+        ;(yield define("test")).foo.must.have.property("default", true)
       })
 
-      describe("given 0::boolean", function() {
-        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 0::boolean)')
-
-        it("must be set to false", function() {
-          this.ddl.foo.must.have.property("default", false)
-        })
+      it("must be set to false given 0::boolean", function*() {
+        yield query('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 0::boolean)')
+        ;(yield define("test")).foo.must.have.property("default", false)
       })
 
-      describe("given 'f'::boolean", function() {
-        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'f\'::boolean)')
-
-        it("must be set to false", function() {
-          this.ddl.foo.must.have.property("default", false)
-        })
+      it("must be set to false given 'f'::boolean", function*() {
+        yield query('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT \'f\'::boolean)')
+        ;(yield define("test")).foo.must.have.property("default", false)
       })
 
-      describe("given 42::boolean", function() {
-        withSql('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 42::boolean)')
-
-        it("must be set to undefined", function() {
-          this.ddl.foo.must.have.property("default", undefined)
-        })
+      it("must be set to undefined given 42::boolean", function*() {
+        yield query('CREATE TABLE "test" ("foo" BOOLEAN DEFAULT 42::boolean)')
+        ;(yield define("test")).foo.must.have.property("default", undefined)
       })
     })
 
     describe("of INTERVAL column", function() {
-      describe("given '00:00:00'::interval", function() {
-        withSql(
+      it("must be set to \"00:00:00\" given '00:00:00'::interval", function*() {
+        yield query(
           'CREATE TABLE "test" ("foo" INTERVAL DEFAULT \'00:00:00\'::interval)'
         )
 
-        it("must be set to \"00:00:00\"", function() {
-          this.ddl.foo.must.have.property("default", "00:00:00")
-        })
+        ;(yield define("test")).foo.must.have.property("default", "00:00:00")
       })
     })
   })
-
-  function withSql(sql, fn) {
-    beforeEach(function(done) { db.query(sql, done) })
-    beforeEach(withAttrs(function(ddl) { this.ddl = ddl }))
-  }
-
-  function withAttrs(fn) {
-    return function(done) {
-      var self = this
-      ddl(db, "test", function(err, ddl) {
-        if (err) return done(err)
-        fn.call(self, ddl)
-        done()
-      })
-    }
-  }
 })

@@ -1,4 +1,4 @@
-NODE_OPTS =
+NODE_OPTS = --harmony-generators
 TEST_OPTS =
 
 love:
