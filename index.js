@@ -25,6 +25,10 @@ Ddl.__defineGetter__("postgresql", function() {
   return require("./lib/postgresql")
 })
 
+Ddl.__defineGetter__("postgresqlSync", function() {
+  return require("./lib/postgresql_sync")
+})
+
 /**
  * The object specifying all properties of a single attribute or database
  * column.

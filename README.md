@@ -79,6 +79,7 @@ For extended documentation, please see the [DDL.js API Documentation][api].
 
 ### [Ddl](https://github.com/moll/js-ddl/blob/master/doc/API.md#Ddl)
 - [postgresql](https://github.com/moll/js-ddl/blob/master/doc/API.md#Ddl.postgresql)(connection, tableName, callback)
+- [postgresqlSync](https://github.com/moll/js-ddl/blob/master/doc/API.md#Ddl.postgresqlSync)(connection, tableName)
 - [sqlite3](https://github.com/moll/js-ddl/blob/master/doc/API.md#Ddl.sqlite3)(connection, tableName, callback)
 
 ### [Attribute](https://github.com/moll/js-ddl/blob/master/doc/API.md#Attribute)

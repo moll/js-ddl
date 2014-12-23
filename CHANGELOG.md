@@ -1,3 +1,8 @@
+## Unreleased
+- Adds [`Ddl.postgresqlSync`][] for getting the DDL synchronously.
+
+[`Ddl.postgresqlSync`]: https://github.com/moll/js-ddl/blob/master/doc/API.md#Ddl.postgresqlSync
+
 ## 1.0.0 (May 30, 2014)
 - Renamed from Attributes.js to DDL.js.
 - Returns an instance of [`Ddl`][] from [`Ddl.sqlite3`][] and

@@ -1,6 +1,10 @@
+var _ = require("underscore")
 var Ddl = require("../..")
 
 exports.mustPassSimpleTable = function(query, define) {
+  // Might be given a synchronous define function. Ensure it could be yielded.
+  define = _.compose(Promise.resolve.bind(Promise), define)
+
   beforeEach(function*() {
     yield query(
       'CREATE TABLE "test" (' +

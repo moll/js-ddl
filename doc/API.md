@@ -2,6 +2,7 @@ DDL.js API Documentation
 ========================
 ### [Ddl](#Ddl)
 - [postgresql](#Ddl.postgresql)(connection, tableName, callback)
+- [postgresqlSync](#Ddl.postgresqlSync)(connection, tableName)
 - [sqlite3](#Ddl.sqlite3)(connection, tableName, callback)
 
 ### [Attribute](#Attribute)
@@ -45,6 +46,25 @@ var db = new Pg.Client("postgresql://localhost/world")
 db.connect()
 
 Ddl.postgresql(db, "people", console.log)
+```
+
+<a name="Ddl.postgresqlSync" />
+### Ddl.postgresqlSync(connection, tableName)
+Queries a PostgreSQL database table for its data definition synchronously.
+
+Give it a native [`PgClient`](https://github.com/brianc/node-pg-native) for
+`connection`.  
+Returns a [`Ddl`](#Ddl) object with attributes.
+
+**Examples**:
+```javascript
+var Ddl = require("ddl")
+var Pg = require("pg-native")
+
+var db = new Pg
+db.connectSync("postgresql://localhost/world")
+
+Ddl.postgresqlSync(db, "people")
 ```
 
 <a name="Ddl.sqlite3" />
