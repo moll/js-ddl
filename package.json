@@ -9,6 +9,7 @@
 		"ddl",
 		"definition",
 		"models",
+		"pg",
 		"postgresql",
 		"rdbms",
 		"schema",
