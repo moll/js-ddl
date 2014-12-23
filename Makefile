@@ -56,6 +56,7 @@ dropdb:
 
 clean:
 	rm -rf tmp *.tgz
+	npm prune --production
 
 .PHONY: love
 .PHONY: test spec autotest autospec
