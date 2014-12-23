@@ -1,3 +1,4 @@
 --recursive
+--check-leaks
 --require must
 --require co-mocha
