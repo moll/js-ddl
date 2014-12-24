@@ -1,4 +1,4 @@
-## Unreleased
+## 1.1.0 (Dec 24, 2013)
 - Adds [`Ddl.postgresqlSync`][] for getting the DDL synchronously.
 
 [`Ddl.postgresqlSync`]: https://github.com/moll/js-ddl/blob/master/doc/API.md#Ddl.postgresqlSync
