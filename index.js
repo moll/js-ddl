@@ -1,3 +1,4 @@
+var define = require("lazy-object").defineLazyProperty
 module.exports = Ddl
 
 /**
@@ -17,15 +18,15 @@ module.exports = Ddl
  */
 function Ddl() {}
 
-Ddl.__defineGetter__("sqlite3", function() {
+define(Ddl, "sqlite3", function() {
   return require("./lib/sqlite3")
 })
 
-Ddl.__defineGetter__("postgresql", function() {
+define(Ddl, "postgresql", function() {
   return require("./lib/postgresql")
 })
 
-Ddl.__defineGetter__("postgresqlSync", function() {
+define(Ddl, "postgresqlSync", function() {
   return require("./lib/postgresql_sync")
 })
 
