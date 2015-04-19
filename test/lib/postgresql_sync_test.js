@@ -18,7 +18,5 @@ describe("Ddl.postgresqlSync", function() {
     ddl.must.have.property("id")
   })
 
-  describe("given a simple table", function() {
-    require("./_database_test").mustPassSimpleTable(query, define)
-  })
+  require("./_database_test").mustPassSimpleTable(query, define)
 })

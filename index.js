@@ -38,29 +38,19 @@ define(Ddl, "postgresqlSync", function() {
  */
 
 /**
- * `true` or `false` depending if the column allows `NULL` values.
- *
- * Column SQL         | Null
- * -------------------|-----
- * `INTEGER          `| `true`
- * `INTEGER NOT NULL `| `false`
- *
- * @property null
- */
-
-/**
  * Closest JavaScript type for the SQL type.
  *
- * Either `Number`, `String`, `Boolean` or `Date`.  
- * Unknown types are left as `String`.
+ * Either the type as a **string** (e.g.` "number"`) or, should the column
+ * allow `NULL` values, an **array** with the type and `"null"`
+ * (e.g. `["number", "null"]`).
  *
  * Column SQL    | Type
  * --------------|-----
- * `VARCHAR(60) `| `String`
- * `INTEGER     `| `Number`
- * `BOOLEAN     `| `Boolean`
- * `DATETIME    `| `Date`
- * `DATE        `| `Date`
+ * `VARCHAR(60) `| `"string"`
+ * `INTEGER     `| `"number"`
+ * `BOOLEAN     `| `"boolean"`
+ * `DATETIME    `| `"string"`
+ * `DATE        `| `"string"`
  *
  * @property type
  */
@@ -92,13 +82,13 @@ define(Ddl, "postgresqlSync", function() {
  */
 
 /**
- * For string types it's the maximum number of characters allowed.  Otherwise
- * it's `null`.
+ * For string types with a limit it's the maximum number of characters allowed.
+ * Otherwise not set.
  *
  * Column SQL    | Limit
  * --------------|------
  * `VARCHAR(60) `| `60`
- * `INTEGER     `| `null`
+ * `INTEGER     `| *not set*
  *
- * @property limit
+ * @property maxLength
  */

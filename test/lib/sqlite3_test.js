@@ -12,54 +12,52 @@ describe("Ddl.sqlite3", function() {
   beforeEach(function*() { yield query("BEGIN TRANSACTION") })
   afterEach(function*() { yield query("ROLLBACK TRANSACTION") })
 
-  describe("given a simple table", function() {
-    require("./_database_test").mustPassSimpleTable(query, define)
-  })
+  require("./_database_test").mustPassSimpleTable(query, define)
 
   describe("type", function() {
     _({
-      BIGINT: Number,
-      BLOB: String,
-      BOOLEAN: Boolean,
-      CHARACTER: String,
-      CLOB: String,
-      DATE: Date,
-      DATETIME: Date,
-      DECIMAL: Number,
-      DOUBLE: Number,
-      "DOUBLE PRECISION": Number,
-      FLOAT: Number,
-      INT2: Number,
-      INT8: Number,
-      INT: Number,
-      INTEGER: Number,
-      MEDIUMINT: Number,
-      "NATIVE CHARACTER": String,
-      NCHAR: String,
-      NUMERIC: Number,
-      NVARCHAR: String,
-      REAL: Number,
-      SMALLINT: Number,
-      TEXT: String,
-      TINYINT: Number,
-      "UNSIGNED BIG INT": Number,
-      VARCHAR: String,
-      "VARYING CHARACTER": String,
-    }).each(function(klass, type) {
-      it("must be set to " + klass.name + "given " + type, function*() {
-        yield query('CREATE TABLE "test" ("foo" ' + type + ')')
-        ;(yield define("test")).foo.type.must.equal(klass)
+      BIGINT: "number",
+      BLOB: "string",
+      BOOLEAN: "boolean",
+      CHARACTER: "string",
+      CLOB: "string",
+      DATE: "string",
+      DATETIME: "string",
+      DECIMAL: "number",
+      DOUBLE: "number",
+      "DOUBLE PRECISION": "number",
+      FLOAT: "number",
+      INT2: "number",
+      INT8: "number",
+      INT: "number",
+      INTEGER: "number",
+      MEDIUMINT: "number",
+      "NATIVE CHARACTER": "string",
+      NCHAR: "string",
+      NUMERIC: "number",
+      NVARCHAR: "string",
+      REAL: "number",
+      SMALLINT: "number",
+      TEXT: "string",
+      TINYINT: "number",
+      "UNSIGNED BIG INT": "number",
+      VARCHAR: "string",
+      "VARYING CHARACTER": "string",
+    }).each(function(type, sql) {
+      it("must be set to " + type + "given " + sql, function*() {
+        yield query('CREATE TABLE "test" ("foo" ' + sql + ' NOT NULL)')
+        ;(yield define("test")).foo.type.must.equal(type)
       })
     })
 
     it("must be set properly given differently cased type", function*() {
-      yield query('CREATE TABLE "test" ("foo" Date)')
-      ;(yield define("test")).foo.type.must.equal(Date)
+      yield query('CREATE TABLE "test" ("foo" Date NOT NULL)')
+      ;(yield define("test")).foo.type.must.equal("string")
     })
 
     it("must be set to String given CUSTOM", function*() {
-      yield query('CREATE TABLE "test" ("foo" CUSTOM)')
-      ;(yield define("test")).foo.type.must.equal(String)
+      yield query('CREATE TABLE "test" ("foo" CUSTOM NOT NULL)')
+      ;(yield define("test")).foo.type.must.equal("string")
     })
   })
 
@@ -143,6 +141,20 @@ describe("Ddl.sqlite3", function() {
         yield query('CREATE TABLE "test" ("foo" CUSTOM DEFAULT \'a b c\')')
         ;(yield define("test")).foo.default.must.equal("a b c")
       })
+    })
+  })
+
+  describe("maxLength", function() {
+    it("must return maxLength for varchar even if zero", function*() {
+      yield query(
+        'CREATE TABLE "test" (' +
+        '"id" INTEGER PRIMARY KEY NOT NULL,' +
+        '"name" VARCHAR(0) NOT NULL' +
+        ')'
+      )
+
+      var ddl = yield define("test")
+      ddl.name.must.have.property("maxLength", 0)
     })
   })
 })
