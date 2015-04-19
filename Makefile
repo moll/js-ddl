@@ -36,6 +36,7 @@ doc: tmp/doc.json
 
 toc: tmp/doc.json
 	@~/Documents/Mocumentation/bin/mocument \
+		--title DDL.js \
 		--type yui \
 		--template toc \
 		--priority Ddl \

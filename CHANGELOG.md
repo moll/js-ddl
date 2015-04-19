@@ -1,3 +1,9 @@
+## Unreleased
+- Replaces the custom data definition language with [JSON Schema][jsonschema] v4
+  for describing database and model properties.
+
+[jsonschema]: http://json-schema.org
+
 ## 1.1.0 (Dec 24, 2013)
 - Adds [`Ddl.postgresqlSync`][] for getting the DDL synchronously.
 

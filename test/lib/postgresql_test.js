@@ -13,40 +13,38 @@ describe("Ddl.postgresql", function() {
   beforeEach(function*() { yield query("BEGIN") })
   afterEach(function*() { yield query("ROLLBACK") })
 
-  describe("given a simple table", function() {
-    require("./_database_test").mustPassSimpleTable(query, define)
-  })
+  require("./_database_test").mustPassSimpleTable(query, define)
 
   describe("type", function() {
     _({
-      BIGINT: Number,
-      BIGSERIAL: Number,
-      BOOLEAN: Boolean,
-      "CHARACTER VARYING": String,
-      CHARACTER: String,
-      DATE: Date,
-      "DOUBLE PRECISION": Number,
-      INTEGER: Number,
-      NUMERIC: Number,
-      REAL: Number,
-      SMALLINT: Number,
-      SMALLSERIAL: Number,
-      SERIAL: Number,
-      TEXT: String,
-      TIME: Date,
-      "TIME WITHOUT TIME ZONE": Date,
-      TIMESTAMP: Date,
-      "TIMESTAMP WITHOUT TIME ZONE": Date
-    }).each(function(klass, type) {
-      it("must be set to " + klass.name + " given " + type, function*() {
-        yield query('CREATE TABLE "test" ("foo" ' + type + ')')
-        ;(yield define("test")).foo.type.must.equal(klass)
+      BIGINT: "number",
+      BIGSERIAL: "number",
+      BOOLEAN: "boolean",
+      "CHARACTER VARYING": "string",
+      CHARACTER: "string",
+      DATE: "string",
+      "DOUBLE PRECISION": "number",
+      INTEGER: "number",
+      NUMERIC: "number",
+      REAL: "number",
+      SMALLINT: "number",
+      SMALLSERIAL: "number",
+      SERIAL: "number",
+      TEXT: "string",
+      TIME: "string",
+      "TIME WITHOUT TIME ZONE": "string",
+      TIMESTAMP: "string",
+      "TIMESTAMP WITHOUT TIME ZONE": "string"
+    }).each(function(type, sql) {
+      it("must be set to " + type + " given " + sql, function*() {
+        yield query('CREATE TABLE "test" ("foo" ' + sql + ' NOT NULL)')
+        ;(yield define("test")).foo.type.must.equal(type)
       })
     })
 
     it("must be set properly given differently cased type", function*() {
-      yield query('CREATE TABLE "test" ("foo" Date)')
-      ;(yield define("test")).foo.type.must.equal(Date)
+      yield query('CREATE TABLE "test" ("foo" Date NOT NULL)')
+      ;(yield define("test")).foo.type.must.equal("string")
     })
   })
 

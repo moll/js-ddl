@@ -1,23 +1,22 @@
 DDL.js
 ======
 [![NPM version][npm-badge]](http://badge.fury.io/js/ddl)
-[npm-badge]: https://badge.fury.io/js/ddl.png
 
-DDL.js is a **data definition language** to unify database and model schema
-descriptions for use in JavaScript.  It also has functions to help **query
-databases** (currently **PostgreSQL** and **SQLite3**) for their existing
-**table schemas** and attributes.
+DDL.js is a library that queries database and table schemas (currently from
+**PostgreSQL** and **SQLite3**) and describes their columns with [JSON
+Schema][jsonschema] v4.
 
 You can use DDL.js for **introspection**, to **prepare your domain models** and
 set up **simple type coercions or validations** for those database columns.
 This way you can have the same convenience that Ruby on Rails's ActiveRecord
-provides, but in the JavaScript world. I made this for the decoupled domain
-model library [Soul.js][soul.js] that I'm writing.
+provides, but in the JavaScript world.
 
 DDL.js is open for extension and modifications, so if you have suggestions what
 more it should define or query from the database, please ping me with an
 [email][email], a [tweet][twitter] or [create an issue][issues] on GitHub.
 
+[npm-badge]: https://badge.fury.io/js/ddl.png
+[jsonschema]: http://json-schema.org]
 [soul.js]: https://github.com/moll/js-soul
 
 
@@ -60,9 +59,9 @@ Ddl.postgresql(db, "golfers", function(err, ddl) {})
 Your callback will be called with the following object for `ddl`:
 ```javascript
 {
-  name: {null: false, type: String, default: "Tiger", limit: 255},
-  handicap: {null: false, type: Number, default: 52, limit: null},
-  updated_at: {null: true, type: Date, default: null, limit: null}
+  name: {type: "string", default: "Tiger", maxLength: 255},
+  handicap: {type: "number", default: 52},
+  updated_at: {type: ["string", "null"], default: null}
 }
 ```
 
@@ -71,10 +70,22 @@ table. With DDL.js you can initialize that model's attributes and their
 default values without having to manually keep the database and the model
 declaration in sync.
 
+If you want to use the returned definition with a JSON Schema validator library,
+use it like this:
+
+```javascript
+var Jsck = require("jsck")
+var ddl = Ddl.postgresqlSync(db, "golfers")
+var validation = new Jsck.draft4({type: "object", properties: ddl})
+validation.validate({name: "John", handicap: 13})
+```
+
 
 API
 ---
-For extended documentation, please see the [DDL.js API Documentation][api].
+For extended documentation on all functions, please see the
+[DDL.js API Documentation][api].
+
 [api]: https://github.com/moll/js-ddl/blob/master/doc/API.md
 
 ### [Ddl](https://github.com/moll/js-ddl/blob/master/doc/API.md#Ddl)
@@ -84,8 +95,7 @@ For extended documentation, please see the [DDL.js API Documentation][api].
 
 ### [Attribute](https://github.com/moll/js-ddl/blob/master/doc/API.md#Attribute)
 - [default](https://github.com/moll/js-ddl/blob/master/doc/API.md#attribute.default)
-- [limit](https://github.com/moll/js-ddl/blob/master/doc/API.md#attribute.limit)
-- [null](https://github.com/moll/js-ddl/blob/master/doc/API.md#attribute.null)
+- [maxLength](https://github.com/moll/js-ddl/blob/master/doc/API.md#attribute.maxLength)
 - [type](https://github.com/moll/js-ddl/blob/master/doc/API.md#attribute.type)
 
 
