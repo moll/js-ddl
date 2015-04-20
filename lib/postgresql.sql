@@ -1,17 +1,20 @@
 SELECT
-	attr.attname,
-	format_type(attr.atttypid, attr.atttypmod) AS type,
-	attr.atttypid,
-	attr.atttypmod,
-	attr.attnotnull,
-	pg_get_expr(def.adbin, def.adrelid) AS default
+	columns.column_name AS name,
+	columns.data_type AS type,
+	columns.udt_name::regtype AS udt,
+	columns.column_default AS default,
+	columns.is_nullable::boolean AS nullable,
+	columns.character_maximum_length AS length,
+	attributes.attndims AS dimensions
 
-FROM pg_catalog.pg_attribute AS attr
-LEFT JOIN pg_catalog.pg_attrdef AS def
-	ON attr.attrelid = def.adrelid
-	AND attr.attnum = def.adnum
+FROM information_schema.columns AS columns
 
-WHERE attr.attrelid = $1::regclass
-	AND attr.attnum > 0
-	AND NOT attr.attisdropped
-	ORDER BY attr.attnum
+JOIN pg_catalog.pg_attribute AS attributes
+ON attributes.attrelid = columns.table_name::regclass
+AND attributes.attname = columns.column_name
+AND NOT attributes.attisdropped
+
+WHERE columns.table_schema = 'public'
+AND columns.table_name = $1
+
+ORDER BY ordinal_position

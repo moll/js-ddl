@@ -16,7 +16,7 @@ describe("Ddl.postgresql", function() {
   require("./_database_test").mustPassSimpleTable(query, define)
 
   describe("type", function() {
-    _({
+    var TYPES = {
       BIGINT: "number",
       BIGSERIAL: "number",
       BOOLEAN: "boolean",
@@ -35,16 +35,56 @@ describe("Ddl.postgresql", function() {
       "TIME WITHOUT TIME ZONE": "string",
       TIMESTAMP: "string",
       "TIMESTAMP WITHOUT TIME ZONE": "string"
-    }).each(function(type, sql) {
+    }
+
+    _(TYPES).each(function(type, sql) {
       it("must be set to " + type + " given " + sql, function*() {
         yield query('CREATE TABLE "test" ("foo" ' + sql + ' NOT NULL)')
         ;(yield define("test")).foo.type.must.equal(type)
       })
     })
 
+    it("must be an array of number given INTEGER[]", function*() {
+      yield query('CREATE TABLE "test" ("foo" INTEGER[] NOT NULL)')
+      var ddl = yield define("test")
+      ddl.foo.type.must.equal("array")
+      ddl.foo.items.must.eql({type: "number"})
+    })
+
     it("must be set properly given differently cased type", function*() {
       yield query('CREATE TABLE "test" ("foo" Date NOT NULL)')
       ;(yield define("test")).foo.type.must.equal("string")
+    })
+
+    it("must set type with null and items given a nullable array", function*() {
+      yield query('CREATE TABLE "test" ("foo" TEXT[])')
+      var ddl = yield define("test")
+      ddl.foo.type.must.eql(["array", "null"])
+      ddl.foo.items.must.eql({type: "string"})
+    })
+
+    it("must set items type with null given a non-nullable array", function*() {
+      yield query('CREATE TABLE "test" ("foo" TEXT[] NOT NULL)')
+      var ddl = yield define("test")
+      ddl.foo.type.must.equal("array")
+      ddl.foo.items.must.eql({type: "string"})
+    })
+
+    it("must set type given a two-dimension array", function*() {
+      yield query('CREATE TABLE "test" ("foo" TEXT[][] NOT NULL)')
+      var ddl = yield define("test")
+      ddl.foo.type.must.equal("array")
+      ddl.foo.items.must.eql({type: "array", items: {type: "string"}})
+    })
+
+    it("must set type given a three-dimension array", function*() {
+      yield query('CREATE TABLE "test" ("foo" TEXT[][][] NOT NULL)')
+      var ddl = yield define("test")
+      ddl.foo.type.must.equal("array")
+      ddl.foo.items.must.eql({
+        type: "array",
+        items: {type: "array", items: {type: "string"}}
+      })
     })
   })
 

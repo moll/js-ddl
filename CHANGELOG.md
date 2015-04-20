@@ -1,6 +1,9 @@
 ## Unreleased
 - Replaces the custom data definition language with [JSON Schema][jsonschema] v4
   for describing database and model properties.
+- Adds support for PostgreSQL arrays.  
+  For example, for type `NUMBER[]` you get
+  `{type: "array", items: {type: "number"}}`.
 
 [jsonschema]: http://json-schema.org
 
