@@ -8,10 +8,13 @@
 		"columns",
 		"ddl",
 		"definition",
+		"json",
+		"json-schema",
 		"models",
 		"pg",
 		"postgresql",
 		"rdbms",
+		"schema",
 		"schema",
 		"sql",
 		"sqlite3"
