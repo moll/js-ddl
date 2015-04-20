@@ -47,7 +47,11 @@ define(Ddl, "postgresqlSync", function() {
  * Column SQL    | Type
  * --------------|-----
  * `VARCHAR(60) `| `"string"`
- * `INTEGER     `| `"number"`
+ * `REAL        `| `"number"`
+ * `NUMERIC     `| `"number"`
+ * `SMALLINT    `| `"integer"`
+ * `INTEGER     `| `"integer"`
+ * `BIGINT      `| `"integer"`
  * `BOOLEAN     `| `"boolean"`
  * `DATETIME    `| `"string"`
  * `DATE        `| `"string"`

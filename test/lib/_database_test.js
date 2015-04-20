@@ -12,7 +12,7 @@ exports.mustPassSimpleTable = function(query, define) {
         'CREATE TABLE "test" (' +
         '"id" INTEGER PRIMARY KEY NOT NULL,' +
         '"name" VARCHAR(255) NOT NULL,' +
-        '"age" INTEGER DEFAULT 18,' +
+        '"age" REAL DEFAULT 18,' +
         '"notes" TEXT DEFAULT \'\'' +
         ')'
       )
@@ -29,7 +29,7 @@ exports.mustPassSimpleTable = function(query, define) {
     })
 
     it("must return types", function() {
-      this.ddl.id.type.must.equal("number")
+      this.ddl.id.type.must.equal("integer")
       this.ddl.name.type.must.equal("string")
     })
 
@@ -79,6 +79,15 @@ exports.mustPassDefault = function(query, define) {
     it("must be set to undefined given expression", function*() {
       yield query('CREATE TABLE "test" ("foo" TEXT DEFAULT (1 + 2))')
       ;(yield define("test")).foo.must.have.property("default", undefined)
+    })
+  })
+}
+
+exports.mustPassIntegerDefault = function(query, define) {
+  describe("given common defaults", function() {
+    it("must be set to 42 given 42", function*() {
+      yield query('CREATE TABLE "test" ("foo" INTEGER DEFAULT 42)')
+      ;(yield define("test")).foo.must.have.property("default", 42)
     })
   })
 }

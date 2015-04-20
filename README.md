@@ -60,7 +60,7 @@ Your callback will be called with the following object for `ddl`:
 ```javascript
 {
   name: {type: "string", default: "Tiger", maxLength: 255},
-  handicap: {type: "number", default: 52},
+  handicap: {type: "integer", default: 52},
   updated_at: {type: ["string", "null"], default: null}
 }
 ```

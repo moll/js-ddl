@@ -4,6 +4,9 @@
 - Adds support for PostgreSQL arrays.  
   For example, for type `INTEGER[]` you get
   `{type: "array", items: {type: "integer"}}`.
+- Adds support for the `integer` type.  
+  `INTEGER` and similar column types are now returned as `integer`. JSON Schema
+  supports that.
 
 [jsonschema]: http://json-schema.org
 

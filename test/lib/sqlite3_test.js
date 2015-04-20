@@ -16,7 +16,7 @@ describe("Ddl.sqlite3", function() {
 
   describe("type", function() {
     _({
-      BIGINT: "number",
+      BIGINT: "integer",
       BLOB: "string",
       BOOLEAN: "boolean",
       CHARACTER: "string",
@@ -27,20 +27,20 @@ describe("Ddl.sqlite3", function() {
       DOUBLE: "number",
       "DOUBLE PRECISION": "number",
       FLOAT: "number",
-      INT2: "number",
-      INT8: "number",
-      INT: "number",
-      INTEGER: "number",
-      MEDIUMINT: "number",
+      INT2: "integer",
+      INT8: "integer",
+      INT: "integer",
+      INTEGER: "integer",
+      MEDIUMINT: "integer",
       "NATIVE CHARACTER": "string",
       NCHAR: "string",
       NUMERIC: "number",
       NVARCHAR: "string",
       REAL: "number",
-      SMALLINT: "number",
+      SMALLINT: "integer",
       TEXT: "string",
-      TINYINT: "number",
-      "UNSIGNED BIG INT": "number",
+      TINYINT: "integer",
+      "UNSIGNED BIG INT": "integer",
       VARCHAR: "string",
       "VARYING CHARACTER": "string",
     }).each(function(type, sql) {
@@ -98,10 +98,7 @@ describe("Ddl.sqlite3", function() {
     })
 
     describe("of INTEGER column", function() {
-      it("must be set to 42 given 42", function*() {
-        yield query('CREATE TABLE "test" ("foo" INTEGER DEFAULT 42)')
-        ;(yield define("test")).foo.must.have.property("default", 42)
-      })
+      require("./_database_test").mustPassRealDefault(query, define)
     })
 
     describe("of REAL column", function() {

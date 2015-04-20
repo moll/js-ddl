@@ -17,19 +17,19 @@ describe("Ddl.postgresql", function() {
 
   describe("type", function() {
     var TYPES = {
-      BIGINT: "number",
-      BIGSERIAL: "number",
+      BIGINT: "integer",
+      BIGSERIAL: "integer",
       BOOLEAN: "boolean",
       "CHARACTER VARYING": "string",
       CHARACTER: "string",
       DATE: "string",
       "DOUBLE PRECISION": "number",
-      INTEGER: "number",
+      INTEGER: "integer",
       NUMERIC: "number",
       REAL: "number",
-      SMALLINT: "number",
-      SMALLSERIAL: "number",
-      SERIAL: "number",
+      SMALLINT: "integer",
+      SMALLSERIAL: "integer",
+      SERIAL: "integer",
       TEXT: "string",
       TIME: "string",
       "TIME WITHOUT TIME ZONE": "string",
@@ -44,11 +44,11 @@ describe("Ddl.postgresql", function() {
       })
     })
 
-    it("must be an array of number given INTEGER[]", function*() {
+    it("must be an array of integer given INTEGER[]", function*() {
       yield query('CREATE TABLE "test" ("foo" INTEGER[] NOT NULL)')
       var ddl = yield define("test")
       ddl.foo.type.must.equal("array")
-      ddl.foo.items.must.eql({type: "number"})
+      ddl.foo.items.must.eql({type: "integer"})
     })
 
     it("must be set properly given differently cased type", function*() {
@@ -108,6 +108,10 @@ describe("Ddl.postgresql", function() {
 
         ;(yield define("test")).foo.must.have.property("default", "unknown")
       })
+    })
+
+    describe("of INTEGER column", function() {
+      require("./_database_test").mustPassRealDefault(query, define)
     })
 
     describe("of REAL column", function() {
