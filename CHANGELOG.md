@@ -1,4 +1,4 @@
-## Unreleased
+## 2.0.0 (Apr 20, 2015)
 - Replaces the custom data definition language with [JSON Schema][jsonschema] v4
   for describing database and model properties.
 - Adds support for PostgreSQL arrays.  
