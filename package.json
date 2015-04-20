@@ -1,7 +1,7 @@
 {
 	"name": "ddl",
 	"version": "1.1.0",
-	"description": "Query a database (currently PostgreSQL or Sqlite3) for its schema (data definition) and get back columns and their properties, such as name, type and default value in a common format. You can use this for e.g. introspection or preparing your domain models like Rails's Active Record does.",
+	"description": "Gets you a JSON Schema from PostgreSQL or SQLite3. Also supports arrays and default values. Use it for introspection or preparing your domain models like with Rails's Active Record.",
 	"keywords": [
 		"attribute",
 		"attributes",
