@@ -25,6 +25,8 @@ describe("Ddl.postgresql", function() {
       DATE: "string",
       "DOUBLE PRECISION": "number",
       INTEGER: "integer",
+      JSON: "object",
+      JSONB: "object",
       NUMERIC: "number",
       REAL: "number",
       SMALLINT: "integer",

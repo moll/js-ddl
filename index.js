@@ -55,6 +55,8 @@ define(Ddl, "postgresqlSync", function() {
  * `BOOLEAN     `| `"boolean"`
  * `DATETIME    `| `"string"`
  * `DATE        `| `"string"`
+ * `JSON        `| `"object"`
+ * `JSONB       `| `"object"`
  *
  * @property type
  */

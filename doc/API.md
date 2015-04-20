@@ -144,3 +144,5 @@ Column SQL    | Type
 `BOOLEAN     `| `"boolean"`
 `DATETIME    `| `"string"`
 `DATE        `| `"string"`
+`JSON        `| `"object"`
+`JSONB       `| `"object"`

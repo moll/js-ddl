@@ -7,6 +7,8 @@
 - Adds support for the `integer` type.  
   `INTEGER` and similar column types are now returned as `integer`. JSON Schema
   supports that.
+- Adds support for PostgreSQL JSON and JSOB types.  
+  They're returned as `{type: "object"}`.
 
 [jsonschema]: http://json-schema.org
 
