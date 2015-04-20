@@ -2,12 +2,12 @@
 - Replaces the custom data definition language with [JSON Schema][jsonschema] v4
   for describing database and model properties.
 - Adds support for PostgreSQL arrays.  
-  For example, for type `NUMBER[]` you get
-  `{type: "array", items: {type: "number"}}`.
+  For example, for type `INTEGER[]` you get
+  `{type: "array", items: {type: "integer"}}`.
 
 [jsonschema]: http://json-schema.org
 
-## 1.1.0 (Dec 24, 2013)
+## 1.1.0 (Dec 24, 2014)
 - Adds [`Ddl.postgresqlSync`][] for getting the DDL synchronously.
 
 [`Ddl.postgresqlSync`]: https://github.com/moll/js-ddl/blob/master/doc/API.md#Ddl.postgresqlSync
