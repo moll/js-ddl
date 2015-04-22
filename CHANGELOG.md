@@ -1,3 +1,7 @@
+## 2.0.1 (Apr 22, 2015)
+- Fixes link to [JSON Schema][jsonschema].  
+  Thanks to [Jakob Egger](http://eggerapps.at/) for the patch!
+
 ## 2.0.0 (Apr 20, 2015)
 - Replaces the custom data definition language with [JSON Schema][jsonschema] v4
   for describing database and model properties.
