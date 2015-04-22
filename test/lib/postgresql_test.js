@@ -113,7 +113,7 @@ describe("Ddl.postgresql", function() {
     })
 
     describe("of INTEGER column", function() {
-      require("./_database_test").mustPassRealDefault(query, define)
+      require("./_database_test").mustPassIntegerDefault(query, define)
     })
 
     describe("of REAL column", function() {

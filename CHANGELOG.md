@@ -1,3 +1,6 @@
+## Unreleased
+- Fixes integer column defaults.
+
 ## 2.0.1 (Apr 22, 2015)
 - Fixes link to [JSON Schema][jsonschema].  
   Thanks to [Jakob Egger](http://eggerapps.at/) for the patch!
