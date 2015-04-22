@@ -16,7 +16,7 @@ more it should define or query from the database, please ping me with an
 [email][email], a [tweet][twitter] or [create an issue][issues] on GitHub.
 
 [npm-badge]: https://badge.fury.io/js/ddl.png
-[jsonschema]: http://json-schema.org]
+[jsonschema]: http://json-schema.org
 [soul.js]: https://github.com/moll/js-soul
 
 
