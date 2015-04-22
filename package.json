@@ -1,6 +1,6 @@
 {
 	"name": "ddl",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"description": "Gets you a JSON Schema from PostgreSQL or SQLite3. Also supports arrays and default values. Use it for introspection or preparing your domain models like with Rails's Active Record.",
 	"keywords": [
 		"attribute",

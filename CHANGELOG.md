@@ -1,4 +1,4 @@
-## Unreleased
+## 2.0.2 (Apr 22, 2015)
 - Fixes integer column defaults.
 
 ## 2.0.1 (Apr 22, 2015)
