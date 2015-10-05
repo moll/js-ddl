@@ -1,5 +1,6 @@
 NODE_OPTS = --harmony
 TEST_OPTS =
+NPM_REBUILD = npm --ignore-scripts false rebuild --build-from-source
 
 love:
 	@echo "Feel like makin' love."
@@ -55,6 +56,10 @@ createdb:
 
 dropdb:
 	dropdb ddl_test
+
+rebuild:
+	$(NPM_REBUILD) sqlite3
+	$(NPM_REBUILD) libpq
 
 clean:
 	rm -rf tmp *.tgz
