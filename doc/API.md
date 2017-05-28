@@ -1,9 +1,9 @@
 DDL.js API Documentation
 ========================
 ### [Ddl](#Ddl)
-- [postgresql](#Ddl.postgresql)(connection, tableName, callback)
-- [postgresqlSync](#Ddl.postgresqlSync)(connection, tableName)
-- [sqlite3](#Ddl.sqlite3)(connection, tableName, callback)
+- [.postgresql](#Ddl.postgresql)(connection, tableName, callback)
+- [.postgresqlSync](#Ddl.postgresqlSync)(connection, tableName)
+- [.sqlite3](#Ddl.sqlite3)(connection, tableName, callback)
 
 ### [Attribute](#Attribute)
 - [default](#attribute.default)
@@ -11,8 +11,7 @@ DDL.js API Documentation
 - [type](#attribute.type)
 
 
-<a name="Ddl" />
-Ddl
+Ddl <a name="Ddl"></a>
 ---
 The object returned by the per-database functions below that contains all
 of a table's columns with the column name as the key and an
@@ -28,8 +27,7 @@ Ddl.sqlite3(db, "people", function(err, ddl) {
 })
 ```
 
-<a name="Ddl.postgresql" />
-### Ddl.postgresql(connection, tableName, callback)
+### Ddl.postgresql(connection, tableName, callback) <a name="Ddl.postgresql"></a>
 Queries a PostgreSQL database table for its data definition.
 
 Give it a [`Pg.Client`](https://github.com/brianc/node-postgres/wiki/Client)
@@ -47,8 +45,7 @@ db.connect()
 Ddl.postgresql(db, "people", console.log)
 ```
 
-<a name="Ddl.postgresqlSync" />
-### Ddl.postgresqlSync(connection, tableName)
+### Ddl.postgresqlSync(connection, tableName) <a name="Ddl.postgresqlSync"></a>
 Queries a PostgreSQL database table for its data definition synchronously.
 
 Give it a native [`PgClient`](https://github.com/brianc/node-pg-native) for
@@ -66,8 +63,7 @@ db.connectSync("postgresql://localhost/world")
 Ddl.postgresqlSync(db, "people")
 ```
 
-<a name="Ddl.sqlite3" />
-### Ddl.sqlite3(connection, tableName, callback)
+### Ddl.sqlite3(connection, tableName, callback) <a name="Ddl.sqlite3"></a>
 Queries a SQLite3 database table for its data definition.
 
 Give it a [`Sqlite3.Database`][Sqlite.Database] for `connection`.  
@@ -85,14 +81,12 @@ Ddl.sqlite3(db, "people", console.log)
 ```
 
 
-<a name="Attribute" />
-Attribute
+Attribute <a name="Attribute"></a>
 ---------
 The object specifying all properties of a single attribute or database
 column.
 
-<a name="attribute.default" />
-### attribute.default
+### attribute.default <a name="attribute.default"></a>
 Default value for the column already cast to the column type.
 
 **Note**: Only simple expressions are parsed and cast for now. Unsupported
@@ -115,8 +109,7 @@ Column SQL                | Default
 `VARCHAR DEFAULT 'Smith' `| `"Smith"`
 `BOOLEAN DEFAULT 't'     `| `true`
 
-<a name="attribute.maxLength" />
-### attribute.maxLength
+### attribute.maxLength <a name="attribute.maxLength"></a>
 For string types with a limit it's the maximum number of characters allowed.
 Otherwise not set.
 
@@ -125,8 +118,7 @@ Column SQL    | Limit
 `VARCHAR(60) `| `60`
 `INTEGER     `| *not set*
 
-<a name="attribute.type" />
-### attribute.type
+### attribute.type <a name="attribute.type"></a>
 Closest JavaScript type for the SQL type.
 
 Either the type as a **string** (e.g.` "number"`) or, should the column
